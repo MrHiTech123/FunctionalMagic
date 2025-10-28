@@ -24,9 +24,9 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝯")) {
             numberParsed = parseNumber(tokens.substring("🝯".length()));
         }
-        // else if (compareToken(tokens, ".")) {
-        //     numberParsed = new RunecraftIntResult(0, tokens.substring(".".length()));
-        // }
+        else if (compareToken(tokens, "|")) {
+            numberParsed = new RunecraftResult<>(0, tokens.substring("|".length()));
+        }
         else {
             numberParsed = new RunecraftResult<>(0, tokens);
         }
@@ -41,7 +41,7 @@ public abstract class RunecraftParser {
     
     public RunecraftResult<?> parse(String tokens) {
         if (tokens.isEmpty()) {
-            return new RunecraftErrorResult("Expected expression, found nothing");
+            return new RunecraftErrorResult("Expected expression, found nothing", tokens);
         }
         RunecraftResult<?> result;
         if (compareToken(tokens, "🜂")) {
@@ -66,18 +66,41 @@ public abstract class RunecraftParser {
         }
         else if (compareToken(tokens, "🜼")) {
             String argumentTokens = tokens.substring("🜼".length());
-            RunecraftResult firstResult = parse(argumentTokens);
-            RunecraftResult secondResult = parse(firstResult.remainingTokens());
+            RunecraftResult<?> firstResult = parse(argumentTokens);
+            RunecraftResult<?> secondResult = parse(firstResult.remainingTokens());
             result = new RunecraftEmptyResult(secondResult.remainingTokens());
         }
         else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯")) {
             result = parseNumber(tokens);
         }
-        else {
-            result = new RunecraftErrorResult("Error: Unknown character");
+        else if (compareToken(tokens, "⊢")) {
+            System.out.println(tokens);
+            RunecraftResult<?> firstAddend = parse(tokens.substring("⊢".length()));
+            if (firstAddend instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens);
+                return error;
+            }
+            else if (!(firstAddend.get() instanceof Integer)) {
+                return new RunecraftErrorResult(
+                        "Error: Expected integer, got " + firstAddend.get().getClass().getName(), 
+                        tokens
+                );
+            }
+            RunecraftResult<?> secondAddend = parse(firstAddend.remainingTokens());
+            if (secondAddend instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens);
+                return error;
+            }
+            else if (!(secondAddend.get() instanceof Integer)) {
+                return new RunecraftErrorResult(
+                        "Error: Expected integer, got " + secondAddend.get().getClass().getName(), 
+                        tokens
+                );
+            }
+            result = new RunecraftResult<>((int)firstAddend.get() + (int)secondAddend.get(), secondAddend.remainingTokens());
         }
-        if (result instanceof RunecraftErrorResult) {
-            System.out.println("Error");
+        else {
+            return new RunecraftErrorResult("Error: Unknown character", tokens);
         }
         return result;
     }

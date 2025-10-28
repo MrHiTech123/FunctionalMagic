@@ -8,9 +8,10 @@ import java.util.List;
 public class RunecraftErrorResult extends RunecraftResult<String> {
     private final List<String> errors = new LinkedList<>();
     
-    public RunecraftErrorResult(String error) {
+    public RunecraftErrorResult(String error, String context) {
         super("", "");
-        errors.add(error);
+        errors.add(error + "\n");
+        addStackTrace(context);
     }
     
     public void addStackTrace(String stackTrace) {
@@ -19,9 +20,9 @@ public class RunecraftErrorResult extends RunecraftResult<String> {
     
     @Override
     public String get() {
-        String toReturn = "";
-        for (String error : errors) {
-            toReturn += error + '\n';
+        String toReturn = errors.getFirst();
+        for (String error : errors.subList(1, errors.size())) {
+            toReturn += "\tat " + error + '\n';
         }
         return toReturn;
     }
