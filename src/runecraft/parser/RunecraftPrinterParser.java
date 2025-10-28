@@ -11,11 +11,8 @@ public class RunecraftPrinterParser extends RunecraftParser {
     
     public static void main(String[] args) {
         RunecraftPrinterParser parser = new RunecraftPrinterParser();
-        parser.parse("🜼🜼🝭🜂🝭🝏🜂🝭🝏🝏🜂");
+        // parser.parse("🜼🜼🝭🜂🝭🝏🜂🝭🝏🝏🜂");
         RunecraftResult result = parser.parse("🝰🝯🝰🝯");
-        if (result instanceof RunecraftErrorResult error) {
-            System.out.println(error.resultString());
-        }
         System.out.println(result.resultInt());
     }
 }

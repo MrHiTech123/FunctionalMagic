@@ -14,7 +14,6 @@ public abstract class RunecraftParser {
     abstract void shoot(RunecraftObjectResult objectShot);
     
     public RunecraftIntResult parseNumber(String tokens) {
-        System.out.println(tokens);
         RunecraftResult numberParsed;
         if (tokens.isEmpty()) {
             return new RunecraftIntResult(0, "");

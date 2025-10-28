@@ -16,8 +16,6 @@ public class RunecraftErrorResult implements RunecraftResult {
         errors.add(stackTrace);
     }
     
-    
-    
     @Override
     public String resultString() {
         String toReturn = "";
