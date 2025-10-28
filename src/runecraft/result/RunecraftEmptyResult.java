@@ -1,24 +1,12 @@
 package runecraft.result;
 
-public class RunecraftEmptyResult implements RunecraftResult{
-    private final String remainingTokens;
-    
+public class RunecraftEmptyResult extends RunecraftResult<String> {
     public RunecraftEmptyResult(String remainingTokens) {
-        this.remainingTokens = remainingTokens;
+        super(null, remainingTokens);
     }
     
-    @Override
-    public String resultString() {
-        return "";
+    public String get() {
+        throw new RuntimeException("Error: Cannot get result from empty Runecraft result");
     }
     
-    @Override
-    public int resultInt() {
-        return 0;
-    }
-    
-    @Override
-    public String remainingTokens() {
-        return remainingTokens;
-    }
 }

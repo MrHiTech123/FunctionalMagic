@@ -11,12 +11,12 @@ public abstract class RunecraftParser {
         
     }
     
-    abstract void shoot(RunecraftObjectResult objectShot);
+    abstract void shoot(RunecraftResult<?> objectShot);
     
-    public RunecraftIntResult parseNumber(String tokens) {
-        RunecraftResult numberParsed;
+    public RunecraftResult<Integer> parseNumber(String tokens) {
+        RunecraftResult<Integer> numberParsed;
         if (tokens.isEmpty()) {
-            return new RunecraftIntResult(0, "");
+            return new RunecraftResult<>(0, "");
         }
         if (compareToken(tokens, "🝰")) {
             numberParsed = parseNumber(tokens.substring("🝰".length()));
@@ -28,37 +28,37 @@ public abstract class RunecraftParser {
         //     numberParsed = new RunecraftIntResult(0, tokens.substring(".".length()));
         // }
         else {
-            numberParsed = new RunecraftIntResult(0, tokens);
+            numberParsed = new RunecraftResult<>(0, tokens);
         }
         
-        int resultNum = (numberParsed.resultInt() * 2);
+        int resultNum = (numberParsed.get() * 2);
         if (compareToken(tokens,"🝯")) {
             ++resultNum;
         }
-        return new RunecraftIntResult(resultNum, numberParsed.remainingTokens());
+        return new RunecraftResult<>(resultNum, numberParsed.remainingTokens());
     }
     
     
-    public RunecraftResult parse(String tokens) {
+    public RunecraftResult<?> parse(String tokens) {
         if (tokens.isEmpty()) {
             return new RunecraftErrorResult("Expected expression, found nothing");
         }
-        RunecraftResult result;
+        RunecraftResult<?> result;
         if (compareToken(tokens, "🜂")) {
-            result = new RunecraftObjectResult("Fire", tokens.substring("🜂".length()));
+            result = new RunecraftResult<>("Fire", tokens.substring("🜂".length()));
         }
         
         else if (compareToken(tokens, "🝏")) {
-            RunecraftResult substanceOfBolt = parse(tokens.substring("🝏".length()));
-            return new RunecraftObjectResult("(boltOf " + substanceOfBolt.resultString() + ")", substanceOfBolt.remainingTokens());
+            RunecraftResult<?> substanceOfBolt = parse(tokens.substring("🝏".length()));
+            return new RunecraftResult<>("(boltOf " + substanceOfBolt.get() + ")", substanceOfBolt.remainingTokens());
         }
         
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            RunecraftResult objectShot = parse(leftoverTokens);
-            if (objectShot instanceof RunecraftObjectResult runecraftObjectResult) {
-                shoot(runecraftObjectResult);
+            RunecraftResult<?> objectShot = parse(leftoverTokens);
+            if (objectShot.get() instanceof String) {
+                shoot(objectShot);
             }
             
             result = new RunecraftEmptyResult(objectShot.remainingTokens());

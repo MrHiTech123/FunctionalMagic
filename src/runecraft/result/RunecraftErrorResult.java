@@ -5,10 +5,11 @@ import runecraft.error.RunecraftTypeException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class RunecraftErrorResult implements RunecraftResult {
+public class RunecraftErrorResult extends RunecraftResult<String> {
     private final List<String> errors = new LinkedList<>();
     
     public RunecraftErrorResult(String error) {
+        super("", "");
         errors.add(error);
     }
     
@@ -17,21 +18,11 @@ public class RunecraftErrorResult implements RunecraftResult {
     }
     
     @Override
-    public String resultString() {
+    public String get() {
         String toReturn = "";
         for (String error : errors) {
             toReturn += error + '\n';
         }
         return toReturn;
-    }
-    
-    @Override
-    public int resultInt() {
-        throw new RunecraftTypeException("Error: Error runtime exception was asked for int");
-    }
-    
-    @Override
-    public String remainingTokens() {
-        return "";
     }
 }
