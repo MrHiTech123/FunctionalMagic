@@ -8,6 +8,7 @@ public class Test {
         // }
         
         System.out.println(Substance.combine(Substance.WATER, Substance.FLESH));
+        System.out.println(Substance.combine(Substance.WATER, Substance.FIRE));
         
     }
 }
