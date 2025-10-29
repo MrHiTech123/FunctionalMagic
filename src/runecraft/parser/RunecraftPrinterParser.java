@@ -23,8 +23,8 @@ public class RunecraftPrinterParser extends RunecraftParser {
         // //RunecraftResult<?> resultAddFailure = parser.parse("⊢🝯🝰🝯⊢🝯🝰🝯⊢🝯🝰🝯|🜂🝰🝯");
         // System.out.println(resultAddSuccess.get());
         // // System.out.println(resultAddFailure.get());
-        
-        parser.runProgram("🝭🝏🜑🜂🜄");
+        parser.runProgram("🝭🝏🜑🜃♀");
+        parser.runProgram("🝭🝏🜑🜂🜂");
         
         
     }
