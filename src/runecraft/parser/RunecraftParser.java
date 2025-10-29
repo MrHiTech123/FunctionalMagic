@@ -13,6 +13,24 @@ public abstract class RunecraftParser {
     
     abstract void shoot(RunecraftResult<?> objectShot);
     
+    // protected <FirstArgumentClass, SecondArgumentClass, ReturnValueClass> 
+    //   RunecraftResult<?> doBiFunction(String tokens) {
+    //     RunecraftResult<?> firstArgument = parse(tokens);
+    //     if (firstArgument instanceof RunecraftErrorResult) {
+    //         return firstArgument;
+    //     }
+    //     FirstArgumentClass firstArgumentInner;
+    //     try {
+    //         firstArgumentInner = (FirstArgumentClass) firstArgument.get();
+    //     }
+    //     catch (ClassCastException e) {
+    //         return new RunecraftErrorResult("Error: Expected " + );
+    //     }
+    //    
+    //    
+    // }
+    
+    
     public RunecraftResult<Integer> parseNumber(String tokens) {
         RunecraftResult<Integer> numberParsed;
         if (tokens.isEmpty()) {
