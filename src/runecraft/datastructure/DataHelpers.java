@@ -18,9 +18,9 @@ public class DataHelpers {
         return toReturn;
     }
     
-    public static <K, V extends Enum<V>> Map<K, V> mapOfValues(Class<V> keys, Predicate<V> predicate, Function<V, K> keyFunction) {
+    public static <K, V extends Enum<V>> Map<K, V> mapOfValues(Class<V> values, Predicate<V> predicate, Function<V, K> keyFunction) {
         Map<K, V> toReturn = new HashMap<>();
-        for (V currentEnumValue : keys.getEnumConstants()) {
+        for (V currentEnumValue : values.getEnumConstants()) {
             if (predicate.test(currentEnumValue)) {
                 toReturn.put(keyFunction.apply(currentEnumValue), currentEnumValue);
             }

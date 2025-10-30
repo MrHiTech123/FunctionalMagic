@@ -3,6 +3,9 @@ package runecraft.parser;
 import runecraft.result.*;
 import runecraft.variables.Substance;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 public abstract class RunecraftParser {
     
     
@@ -15,22 +18,25 @@ public abstract class RunecraftParser {
     
     abstract void shoot(RunecraftResult<?> objectShot);
     
-    // protected <FirstArgumentClass, SecondArgumentClass, ReturnValueClass> 
-    //   RunecraftResult<?> doBiFunction(String tokens) {
-    //     RunecraftResult<?> firstArgument = parse(tokens);
-    //     if (firstArgument instanceof RunecraftErrorResult) {
-    //         return firstArgument;
-    //     }
-    //     FirstArgumentClass firstArgumentInner;
-    //     try {
-    //         firstArgumentInner = (FirstArgumentClass) firstArgument.get();
-    //     }
-    //     catch (ClassCastException e) {
-    //         return new RunecraftErrorResult("Error: Expected " + );
-    //     }
-    //    
-    //    
-    // }
+    protected <ArgumentClass, ReturnValueClass> 
+      RunecraftResult<?> doFunction(String tokens, Function<ArgumentClass, ReturnValueClass> function) {
+        RunecraftResult<?> firstArgument = runProgramRecursive(tokens);
+        if (firstArgument instanceof RunecraftErrorResult) {
+            return firstArgument;
+        }
+        ArgumentClass firstArgumentInner;
+        try {
+            firstArgumentInner = (ArgumentClass) firstArgument.get();
+        }
+        catch (ClassCastException e) {
+            return new RunecraftErrorResult("Error: Expected other type, got " + firstArgument.get().getClass().getName(), tokens);
+        }
+        
+        ReturnValueClass returnValue = function.apply(firstArgumentInner);
+        
+        return new RunecraftResult<>(returnValue, firstArgument.remainingTokens());
+        
+    }
     
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
