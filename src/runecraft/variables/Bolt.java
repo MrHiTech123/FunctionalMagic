@@ -1,18 +1,36 @@
 package runecraft.variables;
 
 public class Bolt implements RunecraftObject {
-    private Substance substance;
+    private Substance material;
+    private int damage;
+    private int length;
+    private int angle;
     
-    public Bolt(Substance substance) {
-        this.substance = substance;
+    public Bolt(Substance material, int damage, int length, int angle) {
+        this.material = material;
+        this.damage = damage;
+        this.length = length;
+        this.angle = angle;
     }
     
-    public Substance getSubstance() {
-        return substance;
+    public Substance getMaterial() {
+        return material;
+    }
+    
+    public int getDamage() {
+        return damage;
+    }
+    
+    public int getLength() {
+        return length;
+    }
+    
+    public int getAngle() {
+        return angle;
     }
     
     @Override
     public String toString() {
-        return "(boltOf " + substance + ")";
+        return "Bolt(Material=" + material + ", Damage=" + damage + ", Length=" + length + ", Angle=" + angle +")";
     }
 }

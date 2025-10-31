@@ -1,5 +1,6 @@
 package runecraft.parser;
 
+import runecraft.datastructure.functionalinterface.QuadFunction;
 import runecraft.error.RunecraftErrorType;
 import runecraft.result.*;
 import runecraft.variables.Bolt;
@@ -86,6 +87,50 @@ public abstract class RunecraftParser {
         
         Object toReturn = function.apply(firstArgumentValue, secondArgumentValue);
         return new RunecraftResult<>(toReturn, secondArgument.remainingTokens());
+        
+    }
+    
+    protected <FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass>
+    RunecraftResult<?> doQuadFunction(
+            Class<FirstArgumentClass> firstArgumentClassClass,
+            Class<SecondArgumentClass> secondArgumentClassClass,
+            Class<ThirdArgumentClass> thirdArgumentClassClass,
+            Class<FourthArgumentClass> fourthArgumentClassClass,
+            QuadFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass, ?> function,
+            String tokens
+    ) {
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        if (firstArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, firstArgument.remainingTokens());
+            return error;
+        }
+        FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
+        
+        RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
+        if (secondArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, secondArgument.remainingTokens());
+            return error;
+        }
+        
+        SecondArgumentClass secondArgumentValue = secondArgumentClassClass.cast(secondArgument.get());
+        
+        RunecraftResult<?> thirdArgument = readArgument(thirdArgumentClassClass, secondArgument.remainingTokens());
+        if (thirdArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, thirdArgument.remainingTokens());
+            return error;
+        }
+        ThirdArgumentClass thirdArgumentValue = thirdArgumentClassClass.cast(thirdArgument.get());
+        
+        RunecraftResult<?> fourthArgument = readArgument(fourthArgumentClassClass, thirdArgument.remainingTokens());
+        if (fourthArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, fourthArgument.remainingTokens());
+            return error;
+        }
+        
+        FourthArgumentClass fourthArgumentValue = fourthArgumentClassClass.cast(fourthArgument.get());
+        
+        Object toReturn = function.apply(firstArgumentValue, secondArgumentValue, thirdArgumentValue, fourthArgumentValue);
+        return new RunecraftResult<>(toReturn, fourthArgument.remainingTokens());
         
     }
     
@@ -202,8 +247,14 @@ public abstract class RunecraftParser {
         }
             
         else if (compareToken(tokens, "🝏")) {
-            RunecraftResult<?> result = doFunction(Substance.class, Bolt::new, tokens.substring("🝏".length()));
-            return result;
+            return doQuadFunction(
+                    Substance.class,
+                    Integer.class,
+                    Integer.class,
+                    Integer.class,
+                    Bolt::new,
+                    tokens.substring("🝏".length())
+            );
         }
         
         else if (compareToken(tokens, "🝭")) {
