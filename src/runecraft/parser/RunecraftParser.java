@@ -6,6 +6,7 @@ import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
 import java.beans.PropertyEditorSupport;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -100,6 +101,33 @@ public abstract class RunecraftParser {
         return new RunecraftEmptyResult(argument.remainingTokens());
     }
     
+    protected <FirstArgumentClass, SecondArgumentClass>
+    RunecraftResult<?> doBiConsumer(
+            Class<FirstArgumentClass> firstArgumentClassClass,
+            Class<SecondArgumentClass> secondArgumentClassClass,
+            BiConsumer<FirstArgumentClass, SecondArgumentClass> consumer,
+            String tokens
+    ) {
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        if (firstArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, firstArgument.remainingTokens());
+            return error;
+        }
+        FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
+        
+        RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
+        if (secondArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, secondArgument.remainingTokens());
+            return error;
+        }
+        
+        SecondArgumentClass secondArgumentValue = secondArgumentClassClass.cast(secondArgument.get());
+        
+        consumer.accept(firstArgumentValue, secondArgumentValue);
+        return new RunecraftEmptyResult(secondArgument.remainingTokens());
+        
+    }
+    
     public RunecraftResult<Integer> parseNumber(String tokens) {
         RunecraftResult<Integer> numberParsed;
         if (tokens.isEmpty()) {
@@ -175,7 +203,15 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🜼")) {
             String argumentTokens = tokens.substring("🜼".length());
             RunecraftResult<?> firstResult = runProgramRecursive(argumentTokens);
+            if (firstResult instanceof RunecraftErrorResult error) {
+                error.addStackTrace(argumentTokens, firstResult.remainingTokens());
+                return error;
+            }
             RunecraftResult<?> secondResult = runProgramRecursive(firstResult.remainingTokens());
+            if (secondResult instanceof RunecraftErrorResult error) {
+                error.addStackTrace(firstResult.remainingTokens(), secondResult.remainingTokens());
+                return error;
+            }
             return new RunecraftEmptyResult(secondResult.remainingTokens());
         }
         else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯")) {
