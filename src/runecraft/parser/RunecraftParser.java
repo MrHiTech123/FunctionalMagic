@@ -1,6 +1,8 @@
 package runecraft.parser;
 
 import runecraft.result.*;
+import runecraft.variables.Bolt;
+import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
 import java.util.function.BiFunction;
@@ -16,7 +18,7 @@ public abstract class RunecraftParser {
         
     }
     
-    abstract void shoot(RunecraftResult<?> objectShot);
+    abstract void shoot(RunecraftObject objectShot);
     
     
     private <T> String nameFromClass(Class<T> clazz) {
@@ -25,7 +27,7 @@ public abstract class RunecraftParser {
     }
     
     protected <ArgumentClass> 
-      RunecraftResult<?> doFunction(Class<ArgumentClass> argumentClassClass, Function<ArgumentClass, ?> function, String tokens) {
+    RunecraftResult<?> doFunction(Class<ArgumentClass> argumentClassClass, Function<ArgumentClass, ?> function, String tokens) {
         RunecraftResult<?> argument = runProgramRecursive(tokens);
         if (argument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens);
@@ -150,12 +152,12 @@ public abstract class RunecraftParser {
         }
             
         else if (compareToken(tokens, "🝏")) {
-            RunecraftResult<?> substanceOfBolt = runProgramRecursive(tokens.substring("🝏".length()));
-            if (substanceOfBolt instanceof RunecraftErrorResult error) {
+            RunecraftResult<?> result = doFunction(Substance.class, Bolt::new, tokens.substring("🝏".length()));
+            if (result instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens);
                 return error;
             }
-            return new RunecraftResult<>("(boltOf " + substanceOfBolt.get() + ")", substanceOfBolt.remainingTokens());
+            return result;
         }
         
         else if (compareToken(tokens, "🝭")) {
@@ -166,8 +168,8 @@ public abstract class RunecraftParser {
                 error.addStackTrace(tokens);
                 return error;
             }
-            if (objectShot.get() instanceof String) {
-                shoot(objectShot);
+            if (objectShot.get() instanceof RunecraftObject runecraftObject) {
+                shoot(runecraftObject);
             }
             
             return new RunecraftEmptyResult(objectShot.remainingTokens());

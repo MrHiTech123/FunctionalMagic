@@ -1,10 +1,11 @@
 package runecraft.parser;
 
 import runecraft.result.RunecraftResult;
+import runecraft.variables.RunecraftObject;
 
 public class RunecraftPrinterParser extends RunecraftParser {
-    public void shoot(RunecraftResult<?> result) {
-        System.out.println("(shoot " + result.get() + ")");
+    public void shoot(RunecraftObject objectShot) {
+        System.out.println("(shoot " + objectShot + ")");
     }
     
     public static void main(String[] args) {
