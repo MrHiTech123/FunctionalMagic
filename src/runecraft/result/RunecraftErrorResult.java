@@ -7,17 +7,18 @@ public class RunecraftErrorResult extends RunecraftResult<String> {
     private final String error;
     private final List<String> stackTrace = new LinkedList<>();
     
-    public RunecraftErrorResult(String error) {
-        super("", "");
+    public RunecraftErrorResult(String error, String remainingTokens) {
+        super("", remainingTokens);
         this.error = error;
     }
-    public RunecraftErrorResult(String error, String context) {
-        this(error);
-        addStackTrace(context);
-    }
     
-    public void addStackTrace(String stackTrace) {
-        this.stackTrace.add(stackTrace);
+    public void addStackTrace(String tokens, String remainingTokens) {
+        if (remainingTokens.isEmpty()) {
+            this.stackTrace.add(tokens);
+        }
+        else {
+            this.stackTrace.add(tokens.substring(0, tokens.lastIndexOf(remainingTokens)));
+        }
     }
     
     @Override

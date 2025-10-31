@@ -38,7 +38,7 @@ public abstract class RunecraftParser {
             return result;
         }
         else {
-            return new RunecraftErrorResult("Error: Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()));
+            return new RunecraftErrorResult("Error: Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()), result.remainingTokens());
         }
         
     }
@@ -47,7 +47,7 @@ public abstract class RunecraftParser {
     RunecraftResult<?> doFunction(Class<ArgumentClass> argumentClassClass, Function<ArgumentClass, ?> function, String tokens) {
         RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
         if (argument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens);
+            error.addStackTrace(tokens, argument.remainingTokens());
             return error;
         }
         Object result = function.apply(argumentClassClass.cast(argument.get()));
@@ -65,14 +65,14 @@ public abstract class RunecraftParser {
     ) {
         RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
         if (firstArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens);
+            error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
         }
         FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
         
         RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
         if (secondArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens);
+            error.addStackTrace(tokens, secondArgument.remainingTokens());
             return error;
         }
         
@@ -91,7 +91,7 @@ public abstract class RunecraftParser {
     ) {
         RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
         if (argument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens);
+            error.addStackTrace(tokens, argument.remainingTokens());
             return error;
         }
         
@@ -128,7 +128,7 @@ public abstract class RunecraftParser {
     public RunecraftResult<?> runProgramRecursive(String tokens) {
         
         if (tokens.isEmpty()) {
-            return new RunecraftErrorResult("Expected expression, found nothing", tokens);
+            return new RunecraftErrorResult("Expected expression, found nothing", "");
         }
         
         else if (compareToken(tokens, "🜂")) {
@@ -155,7 +155,7 @@ public abstract class RunecraftParser {
             if (result.get() == null) {
                 RunecraftResult<?> firstArg = runProgramRecursive(tokens.substring("🜑".length()));
                 RunecraftResult<?> secondArg = runProgramRecursive(firstArg.remainingTokens());
-                return new RunecraftErrorResult("Error: " + firstArg.get() + " cannot be combined with " + secondArg.get());
+                return new RunecraftErrorResult("Error: " + firstArg.get() + " cannot be combined with " + secondArg.get(), secondArg.remainingTokens());
             }
             return result;
             
@@ -185,14 +185,14 @@ public abstract class RunecraftParser {
             return doBiFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
         }
         else {
-            return new RunecraftErrorResult("Error: Unknown character", tokens);
+            return new RunecraftErrorResult("Error: Unknown character", tokens.substring(1));
         }
     }
     
     public void runProgram(String tokens) {
         RunecraftResult<?> result = runProgramRecursive(tokens);
         if (result instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens);
+            error.addStackTrace(tokens, "");
             System.out.println(error.get());
         }
         
