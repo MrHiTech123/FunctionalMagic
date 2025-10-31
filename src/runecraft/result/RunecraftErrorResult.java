@@ -1,15 +1,19 @@
 package runecraft.result;
 
+import runecraft.error.RunecraftErrorType;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class RunecraftErrorResult extends RunecraftResult<String> {
-    private final String error;
+    private final RunecraftErrorType errorType;
+    private final String errorMessage;
     private final List<String> stackTrace = new LinkedList<>();
     
-    public RunecraftErrorResult(String error, String remainingTokens) {
+    public RunecraftErrorResult(RunecraftErrorType errorType, String errorMessage, String remainingTokens) {
         super("", remainingTokens);
-        this.error = error;
+        this.errorType = errorType;
+        this.errorMessage = errorMessage;
     }
     
     public void addStackTrace(String tokens, String remainingTokens) {
@@ -23,7 +27,7 @@ public class RunecraftErrorResult extends RunecraftResult<String> {
     
     @Override
     public String get() {
-        String toReturn = error + '\n';
+        String toReturn = errorType + ": " + errorMessage + '\n';
         for (String error : stackTrace) {
             toReturn += "\tat " + error + '\n';
         }

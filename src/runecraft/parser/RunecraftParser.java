@@ -1,5 +1,6 @@
 package runecraft.parser;
 
+import runecraft.error.RunecraftErrorType;
 import runecraft.result.*;
 import runecraft.variables.Bolt;
 import runecraft.variables.RunecraftObject;
@@ -39,7 +40,11 @@ public abstract class RunecraftParser {
             return result;
         }
         else {
-            return new RunecraftErrorResult("Error: Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()), result.remainingTokens());
+            return new RunecraftErrorResult(
+                    RunecraftErrorType.TypeError,
+                    "Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()),
+                    result.remainingTokens()
+            );
         }
         
     }
@@ -156,7 +161,11 @@ public abstract class RunecraftParser {
     public RunecraftResult<?> runProgramRecursive(String tokens) {
         
         if (tokens.isEmpty()) {
-            return new RunecraftErrorResult("Expected expression, found nothing", "");
+            return new RunecraftErrorResult(
+                    RunecraftErrorType.SyntaxError,
+                    "Expected expression, found nothing", 
+                    ""
+            );
         }
         
         else if (compareToken(tokens, "🜂")) {
@@ -183,7 +192,10 @@ public abstract class RunecraftParser {
             if (result.get() == null) {
                 RunecraftResult<?> firstArg = runProgramRecursive(tokens.substring("🜑".length()));
                 RunecraftResult<?> secondArg = runProgramRecursive(firstArg.remainingTokens());
-                return new RunecraftErrorResult("Error: " + firstArg.get() + " cannot be combined with " + secondArg.get(), secondArg.remainingTokens());
+                return new RunecraftErrorResult(
+                        RunecraftErrorType.RecipeError,
+                        firstArg.get() + " cannot be combined with " + secondArg.get(),
+                        secondArg.remainingTokens());
             }
             return result;
             
@@ -221,7 +233,11 @@ public abstract class RunecraftParser {
             return doBiFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
         }
         else {
-            return new RunecraftErrorResult("Error: Unknown character", tokens.substring(1));
+            return new RunecraftErrorResult(
+                    RunecraftErrorType.SyntaxError, 
+                    "Unknown character", 
+                    tokens.substring(1)
+            );
         }
     }
     
