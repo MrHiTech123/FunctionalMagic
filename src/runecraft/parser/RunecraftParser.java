@@ -20,7 +20,7 @@ public abstract class RunecraftParser {
     
     
     protected <ArgumentClass, ReturnValueClass> 
-      RunecraftResult<?> doFunction(String tokens, Function<ArgumentClass, ReturnValueClass> function) {
+      RunecraftResult<?> doFunction(Function<ArgumentClass, ReturnValueClass> function, String tokens) {
         RunecraftResult<?> argument = runProgramRecursive(tokens);
         if (argument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens);
@@ -41,7 +41,7 @@ public abstract class RunecraftParser {
     }
     
     protected <FirstArgumentClass, SecondArgumentClass, ReturnValueClass>
-    RunecraftResult<?> doBiFunction(String tokens, BiFunction<FirstArgumentClass, SecondArgumentClass, ReturnValueClass> function) {
+    RunecraftResult<?> doBiFunction(BiFunction<FirstArgumentClass, SecondArgumentClass, ReturnValueClass> function, String tokens) {
         RunecraftResult<?> firstArgument = runProgramRecursive(tokens);
         if (firstArgument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens);
@@ -104,60 +104,28 @@ public abstract class RunecraftParser {
         if (tokens.isEmpty()) {
             return new RunecraftErrorResult("Expected expression, found nothing", tokens);
         }
-        RunecraftResult<?> result;
         
-        if (compareToken(tokens, "🜂")) {
-            result = new RunecraftResult<>(Substance.FIRE, tokens.substring("🜂".length()));
+        else if (compareToken(tokens, "🜂")) {
+            return new RunecraftResult<>(Substance.FIRE, tokens.substring("🜂".length()));
         }
             else if (compareToken(tokens, "🜄")) {
-                result = new RunecraftResult<>(Substance.WATER, tokens.substring("🜄".length()));
+                return new RunecraftResult<>(Substance.WATER, tokens.substring("🜄".length()));
             }
             else if (compareToken(tokens, "🜁")) {
-                result = new RunecraftResult<>(Substance.AIR, tokens.substring("🜁".length()));
+                return new RunecraftResult<>(Substance.AIR, tokens.substring("🜁".length()));
             }
             else if (compareToken(tokens, "🜃")) {
-                result = new RunecraftResult<>(Substance.EARTH, tokens.substring("🜃".length()));
+                return new RunecraftResult<>(Substance.EARTH, tokens.substring("🜃".length()));
             }
             else if (compareToken(tokens, "🜍")) {
-                result = new RunecraftResult<>(Substance.MIND, tokens.substring("🜍".length()));
+                return new RunecraftResult<>(Substance.MIND, tokens.substring("🜍".length()));
             }
             else if (compareToken(tokens, "♀")) {
-                result = new RunecraftResult<>(Substance.FLESH, tokens.substring("♀".length()));
+                return new RunecraftResult<>(Substance.FLESH, tokens.substring("♀".length()));
             }
             
         else if (compareToken(tokens, "🜑")) {
-            RunecraftResult<?> firstResultParsed = runProgramRecursive(tokens.substring("🜑".length()));
-            if (firstResultParsed instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
-            else if (!(firstResultParsed.get() instanceof Substance)) {
-                return new RunecraftErrorResult(
-                        "Error: Expected substance, found " + firstResultParsed.get().getClass().getName(), 
-                        tokens
-                );
-            }
-            RunecraftResult<Substance> firstResult = (RunecraftResult<Substance>)firstResultParsed;
-            
-            RunecraftResult<?> secondResultParsed = runProgramRecursive(firstResult.remainingTokens());
-            if (secondResultParsed instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
-            else if (!(secondResultParsed.get() instanceof Substance)) {
-                return new RunecraftErrorResult(
-                        "Error: Expected Substance, got " + secondResultParsed.get().getClass().getName(),
-                        tokens
-                );
-            }
-            RunecraftResult<Substance> secondResult = (RunecraftResult<Substance>) secondResultParsed;
-            
-            Substance resultSubstance = Substance.combine(firstResult.get(), secondResult.get());
-            if (resultSubstance == null) {
-                return new RunecraftErrorResult("RecipeError: " + firstResult.get() + " and " + secondResult.get() + " cannot be combined", tokens);
-            }
-            
-            return new RunecraftResult<>(resultSubstance, secondResult.remainingTokens());
+            return doBiFunction(Substance::combine, tokens.substring("🜑".length()));
         }
             
         else if (compareToken(tokens, "🝏")) {
@@ -181,17 +149,17 @@ public abstract class RunecraftParser {
                 shoot(objectShot);
             }
             
-            result = new RunecraftEmptyResult(objectShot.remainingTokens());
+            return new RunecraftEmptyResult(objectShot.remainingTokens());
             
         }
         else if (compareToken(tokens, "🜼")) {
             String argumentTokens = tokens.substring("🜼".length());
             RunecraftResult<?> firstResult = runProgramRecursive(argumentTokens);
             RunecraftResult<?> secondResult = runProgramRecursive(firstResult.remainingTokens());
-            result = new RunecraftEmptyResult(secondResult.remainingTokens());
+            return new RunecraftEmptyResult(secondResult.remainingTokens());
         }
         else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯")) {
-            result = parseNumber(tokens);
+            return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
             System.out.println(tokens);
@@ -217,12 +185,11 @@ public abstract class RunecraftParser {
                         tokens
                 );
             }
-            result = new RunecraftResult<>((int)firstAddend.get() + (int)secondAddend.get(), secondAddend.remainingTokens());
+            return new RunecraftResult<>((int)firstAddend.get() + (int)secondAddend.get(), secondAddend.remainingTokens());
         }
         else {
             return new RunecraftErrorResult("Error: Unknown character", tokens);
         }
-        return result;
     }
     
     public void runProgram(String tokens) {
