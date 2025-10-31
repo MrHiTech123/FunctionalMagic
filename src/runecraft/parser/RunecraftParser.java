@@ -7,6 +7,7 @@ import runecraft.variables.Substance;
 
 import java.beans.PropertyEditorSupport;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class RunecraftParser {
@@ -46,7 +47,6 @@ public abstract class RunecraftParser {
     RunecraftResult<?> doFunction(Class<ArgumentClass> argumentClassClass, Function<ArgumentClass, ?> function, String tokens) {
         RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
         if (argument instanceof RunecraftErrorResult error) {
-            System.out.println(tokens);
             error.addStackTrace(tokens);
             return error;
         }
@@ -81,6 +81,23 @@ public abstract class RunecraftParser {
         Object toReturn = function.apply(firstArgumentValue, secondArgumentValue);
         return new RunecraftResult<>(toReturn, secondArgument.remainingTokens());
         
+    }
+    
+    protected  <ArgumentClass>
+    RunecraftResult<?> doConsumer(
+            Class<ArgumentClass> argumentClassClass, 
+            Consumer<ArgumentClass> consumer, 
+            String tokens
+    ) {
+        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
+        if (argument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens);
+            return error;
+        }
+        
+        ArgumentClass argumentValue = argumentClassClass.cast(argument.get());
+        consumer.accept(argumentValue);
+        return new RunecraftEmptyResult(argument.remainingTokens());
     }
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
@@ -152,16 +169,13 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            RunecraftResult<?> objectShot = runProgramRecursive(leftoverTokens);
-            if (objectShot instanceof RunecraftErrorResult error) {
+            RunecraftResult<?> result = doConsumer(RunecraftObject.class, this::shoot, leftoverTokens);
+            if (result instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens);
                 return error;
             }
-            if (objectShot.get() instanceof RunecraftObject runecraftObject) {
-                shoot(runecraftObject);
-            }
             
-            return new RunecraftEmptyResult(objectShot.remainingTokens());
+            return result;
             
         }
         else if (compareToken(tokens, "🜼")) {
