@@ -135,10 +135,6 @@ public abstract class RunecraftParser {
             
         else if (compareToken(tokens, "🜑")) {
             RunecraftResult<?> result = doBiFunction(Substance.class, Substance.class, Substance::combine, tokens.substring("🜑".length()));
-            if (result instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
             if (result.get() == null) {
                 RunecraftResult<?> firstArg = runProgramRecursive(tokens.substring("🜑".length()));
                 RunecraftResult<?> secondArg = runProgramRecursive(firstArg.remainingTokens());
@@ -150,10 +146,6 @@ public abstract class RunecraftParser {
             
         else if (compareToken(tokens, "🝏")) {
             RunecraftResult<?> result = doFunction(Substance.class, Bolt::new, tokens.substring("🝏".length()));
-            if (result instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
             return result;
         }
         
