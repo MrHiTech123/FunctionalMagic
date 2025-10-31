@@ -1,27 +1,29 @@
 package runecraft.result;
 
-import runecraft.error.RunecraftTypeException;
-
 import java.util.LinkedList;
 import java.util.List;
 
 public class RunecraftErrorResult extends RunecraftResult<String> {
-    private final List<String> errors = new LinkedList<>();
+    private final String error;
+    private final List<String> stackTrace = new LinkedList<>();
     
-    public RunecraftErrorResult(String error, String context) {
+    public RunecraftErrorResult(String error) {
         super("", "");
-        errors.add(error + "\n");
+        this.error = error;
+    }
+    public RunecraftErrorResult(String error, String context) {
+        this(error);
         addStackTrace(context);
     }
     
     public void addStackTrace(String stackTrace) {
-        errors.add(stackTrace);
+        this.stackTrace.add(stackTrace);
     }
     
     @Override
     public String get() {
-        String toReturn = errors.getFirst();
-        for (String error : errors.subList(1, errors.size())) {
+        String toReturn = error + '\n';
+        for (String error : stackTrace) {
             toReturn += "\tat " + error + '\n';
         }
         return toReturn;
