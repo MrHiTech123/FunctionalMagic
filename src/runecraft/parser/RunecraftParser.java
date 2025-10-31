@@ -169,13 +169,7 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            RunecraftResult<?> result = doConsumer(RunecraftObject.class, this::shoot, leftoverTokens);
-            if (result instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
-            
-            return result;
+            return doConsumer(RunecraftObject.class, this::shoot, leftoverTokens);
             
         }
         else if (compareToken(tokens, "🜼")) {
@@ -188,12 +182,7 @@ public abstract class RunecraftParser {
             return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
-            RunecraftResult<?> result = doBiFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
-            if (result instanceof RunecraftErrorResult error) {
-                error.addStackTrace(tokens);
-                return error;
-            }
-            return result;
+            return doBiFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
         }
         else {
             return new RunecraftErrorResult("Error: Unknown character", tokens);
@@ -203,6 +192,7 @@ public abstract class RunecraftParser {
     public void runProgram(String tokens) {
         RunecraftResult<?> result = runProgramRecursive(tokens);
         if (result instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens);
             System.out.println(error.get());
         }
         

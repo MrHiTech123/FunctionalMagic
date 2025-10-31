@@ -21,6 +21,7 @@ public class RunecraftPrinterParser extends RunecraftParser {
         parser.runProgram("🝭🝏🜑🜄🜂");
         parser.runProgram("🝭🝏🜑🜂🜂");
         parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
+        parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
         
         
     }
