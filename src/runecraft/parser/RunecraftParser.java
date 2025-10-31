@@ -18,26 +18,61 @@ public abstract class RunecraftParser {
     
     abstract void shoot(RunecraftResult<?> objectShot);
     
+    
     protected <ArgumentClass, ReturnValueClass> 
       RunecraftResult<?> doFunction(String tokens, Function<ArgumentClass, ReturnValueClass> function) {
-        RunecraftResult<?> firstArgument = runProgramRecursive(tokens);
-        if (firstArgument instanceof RunecraftErrorResult) {
-            return firstArgument;
+        RunecraftResult<?> argument = runProgramRecursive(tokens);
+        if (argument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens);
+            return error;
         }
-        ArgumentClass firstArgumentInner;
+        ArgumentClass argumentValue;
         try {
-            firstArgumentInner = (ArgumentClass) firstArgument.get();
+            argumentValue = (ArgumentClass) argument.get();
+        }
+        catch (ClassCastException e) {
+            return new RunecraftErrorResult("Error: Expected other type, got " + argument.get().getClass().getName(), tokens);
+        }
+        
+        ReturnValueClass returnValue = function.apply(argumentValue);
+        
+        return new RunecraftResult<>(returnValue, argument.remainingTokens());
+        
+    }
+    
+    protected <FirstArgumentClass, SecondArgumentClass, ReturnValueClass>
+    RunecraftResult<?> doBiFunction(String tokens, BiFunction<FirstArgumentClass, SecondArgumentClass, ReturnValueClass> function) {
+        RunecraftResult<?> firstArgument = runProgramRecursive(tokens);
+        if (firstArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens);
+            return error;
+        }
+        FirstArgumentClass firstArgumentValue;
+        try {
+            firstArgumentValue = (FirstArgumentClass) firstArgument.get();
         }
         catch (ClassCastException e) {
             return new RunecraftErrorResult("Error: Expected other type, got " + firstArgument.get().getClass().getName(), tokens);
         }
         
-        ReturnValueClass returnValue = function.apply(firstArgumentInner);
+        RunecraftResult<?> secondArgument = runProgramRecursive(firstArgument.remainingTokens());
+        if (secondArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens);
+            return error;
+        }
         
-        return new RunecraftResult<>(returnValue, firstArgument.remainingTokens());
+        SecondArgumentClass secondArgumentValue;
+        try {
+            secondArgumentValue = (SecondArgumentClass) secondArgument.get();
+        }
+        catch (ClassCastException e) {
+            return new RunecraftErrorResult("Error: Expected other type, got " + secondArgument.get().getClass().getName(), tokens);
+        }
+        
+        ReturnValueClass toReturn = function.apply(firstArgumentValue, secondArgumentValue);
+        return new RunecraftResult<>(toReturn, secondArgument.remainingTokens());
         
     }
-    
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
         RunecraftResult<Integer> numberParsed;
