@@ -4,6 +4,8 @@ import runecraft.result.RunecraftResult;
 import runecraft.variables.RunecraftObject;
 
 public class RunecraftPrinterParser extends RunecraftParser {
+    
+    @Override
     public void shoot(RunecraftObject objectShot) {
         System.out.println("(shoot " + objectShot + ")");
     }
@@ -17,12 +19,12 @@ public class RunecraftPrinterParser extends RunecraftParser {
         // // System.out.println(resultAddFailure.get());
         // RunecraftResult<?> result = parser.runProgramRecursive("🝰🝯🝰🝯");
         // System.out.println(result.get());
-        parser.runProgram("🝭🝏🜂🝰|🝰|🝰");
-        parser.runProgram("🝭🝏🜑🜄🜂🝯|🝯|🝯🝯");
+        parser.runProgram("🝭🝏🜂🝰.🝰.🝰");
+        parser.runProgram("🝭🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
         parser.runProgram("🝭🝏🜑🜂🜂");
         parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
         parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
-        parser.runProgram("🜼🝭🝏🜑🜂🜂🝭🝏🜑🜄🜂");
+        parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
         
         
     }

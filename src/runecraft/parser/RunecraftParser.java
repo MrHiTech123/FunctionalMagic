@@ -1,13 +1,13 @@
 package runecraft.parser;
 
 import runecraft.datastructure.functionalinterface.QuadFunction;
-import runecraft.error.RunecraftErrorType;
+import runecraft.error.RunecraftError;
+import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
 import runecraft.variables.Bolt;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
-import java.beans.PropertyEditorSupport;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -42,7 +42,7 @@ public abstract class RunecraftParser {
         }
         else {
             return new RunecraftErrorResult(
-                    RunecraftErrorType.TypeError,
+                    RunecraftError.TypeError,
                     "Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()),
                     result.remainingTokens()
             );
@@ -189,8 +189,8 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝯")) {
             numberParsed = parseNumber(tokens.substring("🝯".length()));
         }
-        else if (compareToken(tokens, "|")) {
-            numberParsed = new RunecraftResult<>(0, tokens.substring("|".length()));
+        else if (compareToken(tokens, ".")) {
+            numberParsed = new RunecraftResult<>(0, tokens.substring(".".length()));
         }
         else {
             numberParsed = new RunecraftResult<>(0, tokens);
@@ -207,7 +207,7 @@ public abstract class RunecraftParser {
         
         if (tokens.isEmpty()) {
             return new RunecraftErrorResult(
-                    RunecraftErrorType.SyntaxError,
+                    RunecraftError.SyntaxError,
                     "Expected expression, found nothing", 
                     ""
             );
@@ -238,7 +238,7 @@ public abstract class RunecraftParser {
                 RunecraftResult<?> firstArg = runProgramRecursive(tokens.substring("🜑".length()));
                 RunecraftResult<?> secondArg = runProgramRecursive(firstArg.remainingTokens());
                 return new RunecraftErrorResult(
-                        RunecraftErrorType.RecipeError,
+                        RunecraftError.RecipeError,
                         firstArg.get() + " cannot be combined with " + secondArg.get(),
                         secondArg.remainingTokens());
             }
@@ -285,7 +285,7 @@ public abstract class RunecraftParser {
         }
         else {
             return new RunecraftErrorResult(
-                    RunecraftErrorType.SyntaxError, 
+                    RunecraftError.SyntaxError, 
                     "Unknown character", 
                     tokens.substring(1)
             );
@@ -294,9 +294,14 @@ public abstract class RunecraftParser {
     
     public void runProgram(String tokens) {
         RunecraftResult<?> result = runProgramRecursive(tokens);
+        
+        if (!result.remainingTokens().isEmpty()) {
+            result.addWarning(RunecraftWarningType.TrailingTokensWarning, "Trailing tokens \"" + result.remainingTokens() + "\"");
+        }
+        System.err.println(result.getWarnings());
         if (result instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, "");
-            System.out.println(error.get());
+            System.err.println(error.get());
         }
         
     }

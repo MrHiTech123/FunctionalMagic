@@ -1,6 +1,6 @@
 package runecraft.error;
 
-public enum RunecraftErrorType {
+public enum RunecraftError {
     RecipeError,
     SyntaxError,
     TypeError;

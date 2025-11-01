@@ -1,16 +1,16 @@
 package runecraft.result;
 
-import runecraft.error.RunecraftErrorType;
+import runecraft.error.RunecraftError;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class RunecraftErrorResult extends RunecraftResult<String> {
-    private final RunecraftErrorType errorType;
+    private final RunecraftError errorType;
     private final String errorMessage;
     private final List<String> stackTrace = new LinkedList<>();
     
-    public RunecraftErrorResult(RunecraftErrorType errorType, String errorMessage, String remainingTokens) {
+    public RunecraftErrorResult(RunecraftError errorType, String errorMessage, String remainingTokens) {
         super("", remainingTokens);
         this.errorType = errorType;
         this.errorMessage = errorMessage;
