@@ -29,17 +29,7 @@ public abstract class RunecraftParser {
     
     abstract void shoot(RunecraftObject objectShot);
     
-    private RunecraftResult<?> combineSubstances(Substance first, Substance second) {
-        Substance toReturn = Substance.combine(first, second);
-        if (toReturn == null) {
-            return new RunecraftErrorResult(
-                    RunecraftError.RecipeError,
-                    first + " cannot be combined with " + second, 
-                    ""
-            );
-        }
-        return new RunecraftResult<>(toReturn, "");
-    }
+    
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
         RunecraftResult<Integer> numberParsed;
@@ -96,7 +86,7 @@ public abstract class RunecraftParser {
             }
             
         else if (compareToken(tokens, "🜑")) {
-            return caller.biFunction(Substance.class, Substance.class, this::combineSubstances, tokens.substring("🜑".length()));
+            return caller.biFunction(Substance.class, Substance.class, RunecraftBuiltins::combineSubstances, tokens.substring("🜑".length()));
             
         }
             
