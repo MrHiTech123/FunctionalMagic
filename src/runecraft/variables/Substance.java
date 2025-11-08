@@ -6,7 +6,7 @@ import runecraft.datastructure.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Substance implements RunecraftObject {
+public enum Substance {
     AIR(),
     EARTH(),
     FIRE(),
@@ -80,4 +80,6 @@ public enum Substance implements RunecraftObject {
         Pair<Substance, Substance> recipe = new Pair<>(baseIngredient, modifierIngredient);
         return combinationRecipes.getOrDefault(recipe, null);
     }
+    
+    
 }

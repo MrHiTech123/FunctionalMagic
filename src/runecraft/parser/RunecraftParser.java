@@ -2,8 +2,6 @@ package runecraft.parser;
 
 import runecraft.builtins.RunecraftBuiltins;
 import runecraft.builtins.RunecraftPrinterBuiltins;
-import runecraft.datastructure.functionalinterface.QuadFunction;
-import runecraft.datastructure.functionalinterface.TriFunction;
 import runecraft.error.RunecraftError;
 import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
@@ -100,7 +98,7 @@ public class RunecraftParser {
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            return caller.consumer(RunecraftObject.class, builtins::shoot, leftoverTokens);
+            return caller.function(RunecraftObject.class, builtins::shoot, leftoverTokens);
             
         }
         else if (compareToken(tokens, "🜼")) {

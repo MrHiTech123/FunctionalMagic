@@ -1,10 +1,11 @@
 package runecraft.variables;
 
-public class Bolt implements RunecraftObject {
+public class Bolt extends RunecraftObject {
     private Substance material;
     private int damage;
     private int length;
     private int angle;
+    
     
     public Bolt(Substance material, int damage, int length, int angle) {
         this.material = material;
@@ -31,6 +32,6 @@ public class Bolt implements RunecraftObject {
     
     @Override
     public String toString() {
-        return "Bolt(Material=" + material + ", Damage=" + damage + ", Length=" + length + ", Angle=" + angle +")";
+        return "Bolt(Material=" + material + ", Damage=" + damage + ", Length=" + length + ", Angle=" + angle + ", x=" + x + ", y=" + y +")";
     }
 }

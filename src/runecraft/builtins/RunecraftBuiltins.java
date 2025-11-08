@@ -1,6 +1,7 @@
 package runecraft.builtins;
 
 import runecraft.error.RunecraftError;
+import runecraft.result.RunecraftEmptyResult;
 import runecraft.result.RunecraftErrorResult;
 import runecraft.result.RunecraftResult;
 import runecraft.variables.RunecraftObject;
@@ -19,7 +20,17 @@ public class RunecraftBuiltins {
         return new RunecraftResult<>(toReturn, "");
     }
     
-    public void shoot(RunecraftObject object) {
-        
+    public RunecraftObject createObject(RunecraftObject object, int xOffsest, int yOffset) {
+        object.instantiate(xOffsest, yOffset);
+        return object;
+    }
+    
+    public RunecraftResult<?> shoot(RunecraftObject object) {
+        if (!object.exists()) return new RunecraftErrorResult(
+                RunecraftError.NonExistanceError,
+                "Tried to shoot object " + object + " which does not exist",
+                ""
+        );
+        return new RunecraftEmptyResult("");
     }
 }

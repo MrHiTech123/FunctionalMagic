@@ -56,7 +56,10 @@ public class FunctionCaller {
         }
         Object result = function.apply(argumentClassClass.cast(argument.get()));
         
-        if (result instanceof RunecraftResult<?> runecraftResult) {
+        if (result instanceof RunecraftErrorResult error) {
+            return error;
+        }
+        else if (result instanceof RunecraftResult<?> runecraftResult) {
             return new RunecraftResult<>(runecraftResult.get(), argument.remainingTokens());
         }
         
