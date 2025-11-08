@@ -10,6 +10,7 @@ import runecraft.result.RunecraftResult;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class FunctionCaller {
     private final RunecraftParser parser;
@@ -43,7 +44,12 @@ public class FunctionCaller {
     }
     
     protected <ArgumentClass> 
-    RunecraftResult<?> function(Class<ArgumentClass> argumentClassClass, java.util.function.Function<ArgumentClass, ?> function, String tokens) {
+    RunecraftResult<?> function(
+            Class<ArgumentClass> argumentClassClass, 
+            Function<ArgumentClass, ?> function, 
+            String tokens,
+            boolean addTokensToInternalErrorStacktrace
+    ) {
         RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
         if (argument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, argument.remainingTokens());
@@ -52,7 +58,9 @@ public class FunctionCaller {
         Object result = function.apply(argumentClassClass.cast(argument.get()));
         
         if (result instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, error.remainingTokens());
+            if (addTokensToInternalErrorStacktrace) {
+                error.addStackTrace(tokens, error.remainingTokens());
+            }
             return error;
         }
         else if (result instanceof RunecraftResult<?> runecraftResult) {
@@ -61,6 +69,14 @@ public class FunctionCaller {
         
         return new RunecraftResult<>(result, argument.remainingTokens());
         
+    }
+    
+    protected <ArgumentClass> RunecraftResult<?> function(
+            Class<ArgumentClass> argumentClassClass, 
+            Function<ArgumentClass, ?> function, 
+            String tokens
+    ) {
+        return function(argumentClassClass, function, tokens, true);
     }
     
     protected <FirstArgumentClass, SecondArgumentClass>
@@ -80,7 +96,8 @@ public class FunctionCaller {
                 secondArgumentClassClass,
                 (secondArgument) -> 
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument),
-                firstArgument.remainingTokens()
+                firstArgument.remainingTokens(),
+                false
         );
         
     }
