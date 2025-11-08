@@ -47,8 +47,7 @@ public class FunctionCaller {
     RunecraftResult<?> function(
             Class<ArgumentClass> argumentClassClass, 
             Function<ArgumentClass, ?> function, 
-            String tokens,
-            boolean addTokensToInternalErrorStacktrace
+            String tokens
     ) {
         RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
         if (argument instanceof RunecraftErrorResult error) {
@@ -57,26 +56,12 @@ public class FunctionCaller {
         }
         Object result = function.apply(argumentClassClass.cast(argument.get()));
         
-        if (result instanceof RunecraftErrorResult error) {
-            if (addTokensToInternalErrorStacktrace) {
-                error.addStackTrace(tokens, error.remainingTokens());
-            }
-            return error;
-        }
-        else if (result instanceof RunecraftResult<?> runecraftResult) {
+        if (result instanceof RunecraftResult<?> runecraftResult) {
             return new RunecraftResult<>(runecraftResult.get(), argument.remainingTokens());
         }
         
         return new RunecraftResult<>(result, argument.remainingTokens());
         
-    }
-    
-    protected <ArgumentClass> RunecraftResult<?> function(
-            Class<ArgumentClass> argumentClassClass, 
-            Function<ArgumentClass, ?> function, 
-            String tokens
-    ) {
-        return function(argumentClassClass, function, tokens, true);
     }
     
     protected <FirstArgumentClass, SecondArgumentClass>
@@ -96,8 +81,7 @@ public class FunctionCaller {
                 secondArgumentClassClass,
                 (secondArgument) -> 
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument),
-                firstArgument.remainingTokens(),
-                false
+                firstArgument.remainingTokens()
         );
         
     }
