@@ -15,7 +15,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public abstract class RunecraftParser {
-    
+    private final FunctionCaller caller;
+    public RunecraftParser() {
+        this.caller = new FunctionCaller(this);
+    }
     
     public boolean compareToken(String tokens, String target) {
         if (tokens.length() < target.length()) return false;
@@ -36,163 +39,6 @@ public abstract class RunecraftParser {
             );
         }
         return new RunecraftResult<>(toReturn, "");
-    }
-    
-    
-    private <T> String nameFromClass(Class<T> clazz) {
-        String fullName = clazz.getName();
-        return fullName.substring(fullName.lastIndexOf('.') + 1);
-    }
-    
-    protected <ArgumentClass>
-    RunecraftResult<?> readArgument(Class<ArgumentClass> argumentClassClass, String tokens) {
-        RunecraftResult<?> result = runProgramRecursive(tokens);
-        if (result instanceof RunecraftErrorResult error) {
-            return error;
-        }
-        if (argumentClassClass.isInstance(result.get())) {
-            return result;
-        }
-        else {
-            return new RunecraftErrorResult(
-                    RunecraftError.TypeError,
-                    "Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()),
-                    result.remainingTokens()
-            );
-        }
-        
-    }
-    
-    protected <ArgumentClass> 
-    RunecraftResult<?> doFunction(Class<ArgumentClass> argumentClassClass, Function<ArgumentClass, ?> function, String tokens) {
-        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
-        if (argument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, argument.remainingTokens());
-            return error;
-        }
-        Object result = function.apply(argumentClassClass.cast(argument.get()));
-        
-        if (result instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, error.remainingTokens());
-            return error;
-        }
-        else if (result instanceof RunecraftResult<?> runecraftResult) {
-            return new RunecraftResult<>(runecraftResult.get(), argument.remainingTokens());
-        }
-        
-        return new RunecraftResult<>(result, argument.remainingTokens());
-        
-    }
-    
-    protected <FirstArgumentClass, SecondArgumentClass>
-    RunecraftResult<?> doBiFunction(
-            Class<FirstArgumentClass> firstArgumentClassClass,
-            Class<SecondArgumentClass> secondArgumentClassClass,
-            BiFunction<FirstArgumentClass, SecondArgumentClass, ?> function,
-            String tokens
-    ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
-        if (firstArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, firstArgument.remainingTokens());
-            return error;
-        }
-        
-        return doFunction(
-                secondArgumentClassClass,
-                (secondArgument) -> 
-                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument),
-                firstArgument.remainingTokens()
-        );
-        
-    }
-    
-    protected <FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass>
-    RunecraftResult<?> doTriFunction(
-            Class<FirstArgumentClass> firstArgumentClassClass,
-            Class<SecondArgumentClass> secondArgumentClassClass,
-            Class<ThirdArgumentClass> thirdArgumentClassClass,
-            TriFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, ?> function,
-            String tokens
-    ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
-        if (firstArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, firstArgument.remainingTokens());
-            return error;
-        }
-        
-        return doBiFunction(
-                secondArgumentClassClass,
-                thirdArgumentClassClass,
-                (secondArgument, thirdArgument) -> 
-                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument),
-                firstArgument.remainingTokens()
-        );
-    }
-    
-    protected <FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass>
-    RunecraftResult<?> doQuadFunction(
-            Class<FirstArgumentClass> firstArgumentClassClass,
-            Class<SecondArgumentClass> secondArgumentClassClass,
-            Class<ThirdArgumentClass> thirdArgumentClassClass,
-            Class<FourthArgumentClass> fourthArgumentClassClass,
-            QuadFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass, ?> function,
-            String tokens
-    ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
-        if (firstArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, firstArgument.remainingTokens());
-            return error;
-        }
-        
-        return doTriFunction(
-                secondArgumentClassClass,
-                thirdArgumentClassClass,
-                fourthArgumentClassClass,
-                (secondArgument, thirdArgument, fourthArgument) ->
-                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument, fourthArgument),
-                firstArgument.remainingTokens()
-        );
-        
-    }
-    
-    protected  <ArgumentClass>
-    RunecraftResult<?> doConsumer(
-            Class<ArgumentClass> argumentClassClass, 
-            Consumer<ArgumentClass> consumer, 
-            String tokens
-    ) {
-        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
-        if (argument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, argument.remainingTokens());
-            return error;
-        }
-        
-        ArgumentClass argumentValue = argumentClassClass.cast(argument.get());
-        consumer.accept(argumentValue);
-        return new RunecraftEmptyResult(argument.remainingTokens());
-    }
-    
-    protected <FirstArgumentClass, SecondArgumentClass>
-    RunecraftResult<?> doBiConsumer(
-            Class<FirstArgumentClass> firstArgumentClassClass,
-            Class<SecondArgumentClass> secondArgumentClassClass,
-            BiConsumer<FirstArgumentClass, SecondArgumentClass> consumer,
-            String tokens
-    ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
-        if (firstArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, firstArgument.remainingTokens());
-            return error;
-        }
-        
-        
-        return doConsumer(
-                secondArgumentClassClass,
-                (secondArgument) ->
-                        consumer.accept(firstArgumentClassClass.cast(firstArgument), secondArgument),
-                firstArgument.remainingTokens()
-        );
-        
     }
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
@@ -250,12 +96,12 @@ public abstract class RunecraftParser {
             }
             
         else if (compareToken(tokens, "🜑")) {
-            return doBiFunction(Substance.class, Substance.class, this::combineSubstances, tokens.substring("🜑".length()));
+            return caller.biFunction(Substance.class, Substance.class, this::combineSubstances, tokens.substring("🜑".length()));
             
         }
             
         else if (compareToken(tokens, "🝏")) {
-            return doQuadFunction(
+            return caller.quadFunction(
                     Substance.class,
                     Integer.class,
                     Integer.class,
@@ -268,7 +114,7 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            return doConsumer(RunecraftObject.class, this::shoot, leftoverTokens);
+            return caller.consumer(RunecraftObject.class, this::shoot, leftoverTokens);
             
         }
         else if (compareToken(tokens, "🜼")) {
@@ -289,7 +135,7 @@ public abstract class RunecraftParser {
             return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
-            return doBiFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
+            return caller.biFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
         }
         else {
             return new RunecraftErrorResult(
