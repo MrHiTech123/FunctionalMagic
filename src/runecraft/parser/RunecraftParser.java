@@ -94,6 +94,13 @@ public class RunecraftParser {
                     tokens.substring("🝏".length())
             );
         }
+        else if (compareToken(tokens, "🝧")) {
+            return caller.function(
+                    RunecraftObject.class,
+                    builtins::create,
+                    tokens.substring("🝧".length())
+            );
+        }
         
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
@@ -146,20 +153,15 @@ public class RunecraftParser {
     
     public static void main(String[] args) {
         RunecraftParser parser = new RunecraftParser(new RunecraftPrinterBuiltins());
-        //
-        // RunecraftResult<?> resultAddSuccess = parser.parse("⊢🝯🝰🝯⊢🝯🝰🝯⊢🝯🝰🝯|🜂🝰🝯");
-        // //RunecraftResult<?> resultAddFailure = parser.parse("⊢🝯🝰🝯⊢🝯🝰🝯⊢🝯🝰🝯|🜂🝰🝯");
-        // System.out.println(resultAddSuccess.get());
-        // // System.out.println(resultAddFailure.get());
-        // RunecraftResult<?> result = parser.runProgramRecursive("🝰🝯🝰🝯");
-        // System.out.println(result.get());
-        parser.runProgram("🝭🝏🜂");
-        parser.runProgram("🝏🜂🝯.🝯.🝯");
-        parser.runProgram("🝭🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
-        parser.runProgram("🝭🝏🜑🜂🜂");
-        parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
-        parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
-        parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
+        // parser.runProgram("🝭🝏🜂");
+        // parser.runProgram("🝏🜂🝯.🝯.🝯");
+        // parser.runProgram("🝭🝏🜑🜂🜂");
+        // parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
+        // parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
+        // parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
+        
+        parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
+        
     }
     
     

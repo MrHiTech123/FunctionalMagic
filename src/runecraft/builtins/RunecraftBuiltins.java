@@ -25,6 +25,11 @@ public class RunecraftBuiltins {
         return object;
     }
     
+    public RunecraftObject create(RunecraftObject object) {
+        object.instantiate(0, 0);
+        return object;
+    }
+    
     public RunecraftResult<?> shoot(RunecraftObject object) {
         if (!object.exists()) return new RunecraftErrorResult(
                 RunecraftError.NonExistanceError,

@@ -32,6 +32,6 @@ public class Bolt extends RunecraftObject {
     
     @Override
     public String toString() {
-        return "Bolt(Material=" + material + ", Damage=" + damage + ", Length=" + length + ", Angle=" + angle + ", x=" + x + ", y=" + y +")";
+        return "Bolt(Material=" + material + ", Damage=" + damage + ", Length=" + length + ", Angle=" + angle + ", x=" + x + ", y=" + y +")" + super.toString();
     }
 }
