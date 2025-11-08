@@ -26,6 +26,18 @@ public abstract class RunecraftParser {
     
     abstract void shoot(RunecraftObject objectShot);
     
+    private RunecraftResult<?> combineSubstances(Substance first, Substance second) {
+        Substance toReturn = Substance.combine(first, second);
+        if (toReturn == null) {
+            return new RunecraftErrorResult(
+                    RunecraftError.RecipeError,
+                    first + " cannot be combined with " + second, 
+                    ""
+            );
+        }
+        return new RunecraftResult<>(toReturn, "");
+    }
+    
     
     private <T> String nameFromClass(Class<T> clazz) {
         String fullName = clazz.getName();
@@ -59,6 +71,14 @@ public abstract class RunecraftParser {
             return error;
         }
         Object result = function.apply(argumentClassClass.cast(argument.get()));
+        
+        if (result instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, error.remainingTokens());
+            return error;
+        }
+        else if (result instanceof RunecraftResult<?> runecraftResult) {
+            return new RunecraftResult<>(runecraftResult.get(), argument.remainingTokens());
+        }
         
         return new RunecraftResult<>(result, argument.remainingTokens());
         
@@ -130,7 +150,7 @@ public abstract class RunecraftParser {
                 fourthArgumentClassClass,
                 (secondArgument, thirdArgument, fourthArgument) ->
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument, fourthArgument),
-                tokens
+                firstArgument.remainingTokens()
         );
         
     }
@@ -170,7 +190,7 @@ public abstract class RunecraftParser {
                 secondArgumentClassClass,
                 (secondArgument) ->
                         consumer.accept(firstArgumentClassClass.cast(firstArgument), secondArgument),
-                tokens
+                firstArgument.remainingTokens()
         );
         
     }
@@ -230,16 +250,7 @@ public abstract class RunecraftParser {
             }
             
         else if (compareToken(tokens, "🜑")) {
-            RunecraftResult<?> result = doBiFunction(Substance.class, Substance.class, Substance::combine, tokens.substring("🜑".length()));
-            if (result.get() == null) {
-                RunecraftResult<?> firstArg = runProgramRecursive(tokens.substring("🜑".length()));
-                RunecraftResult<?> secondArg = runProgramRecursive(firstArg.remainingTokens());
-                return new RunecraftErrorResult(
-                        RunecraftError.RecipeError,
-                        firstArg.get() + " cannot be combined with " + secondArg.get(),
-                        secondArg.remainingTokens());
-            }
-            return result;
+            return doBiFunction(Substance.class, Substance.class, this::combineSubstances, tokens.substring("🜑".length()));
             
         }
             

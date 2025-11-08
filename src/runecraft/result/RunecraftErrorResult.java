@@ -17,6 +17,8 @@ public class RunecraftErrorResult extends RunecraftResult<String> {
     }
     
     public void addStackTrace(String tokens, String remainingTokens) {
+        if (tokens.isEmpty()) return;
+        
         if (remainingTokens.isEmpty()) {
             this.stackTrace.add(tokens);
         }

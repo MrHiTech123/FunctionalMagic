@@ -19,7 +19,8 @@ public class RunecraftPrinterParser extends RunecraftParser {
         // // System.out.println(resultAddFailure.get());
         // RunecraftResult<?> result = parser.runProgramRecursive("🝰🝯🝰🝯");
         // System.out.println(result.get());
-        parser.runProgram("🝭🝏🜂🝰.🝰.🝰");
+        parser.runProgram("🝭🝏🜂");
+        parser.runProgram("🝏🜂🝯.🝯.🝯");
         parser.runProgram("🝭🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
         parser.runProgram("🝭🝏🜑🜂🜂");
         parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");

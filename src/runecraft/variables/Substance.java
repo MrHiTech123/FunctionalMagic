@@ -77,10 +77,7 @@ public enum Substance implements RunecraftObject {
     }
     
     public static Substance combine(Substance baseIngredient, Substance modifierIngredient) {
-        
         Pair<Substance, Substance> recipe = new Pair<>(baseIngredient, modifierIngredient);
         return combinationRecipes.getOrDefault(recipe, null);
-        
     }
-    
 }
