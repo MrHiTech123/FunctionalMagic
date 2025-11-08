@@ -1,6 +1,7 @@
 package runecraft.parser;
 
 import runecraft.datastructure.functionalinterface.QuadFunction;
+import runecraft.datastructure.functionalinterface.TriFunction;
 import runecraft.error.RunecraftError;
 import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
@@ -75,19 +76,37 @@ public abstract class RunecraftParser {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
         }
-        FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
         
-        RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
-        if (secondArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, secondArgument.remainingTokens());
+        return doFunction(
+                secondArgumentClassClass,
+                (secondArgument) -> 
+                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument),
+                firstArgument.remainingTokens()
+        );
+        
+    }
+    
+    protected <FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass>
+    RunecraftResult<?> doTriFunction(
+            Class<FirstArgumentClass> firstArgumentClassClass,
+            Class<SecondArgumentClass> secondArgumentClassClass,
+            Class<ThirdArgumentClass> thirdArgumentClassClass,
+            TriFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, ?> function,
+            String tokens
+    ) {
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        if (firstArgument instanceof RunecraftErrorResult error) {
+            error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
         }
         
-        SecondArgumentClass secondArgumentValue = secondArgumentClassClass.cast(secondArgument.get());
-        
-        Object toReturn = function.apply(firstArgumentValue, secondArgumentValue);
-        return new RunecraftResult<>(toReturn, secondArgument.remainingTokens());
-        
+        return doBiFunction(
+                secondArgumentClassClass,
+                thirdArgumentClassClass,
+                (secondArgument, thirdArgument) -> 
+                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument),
+                firstArgument.remainingTokens()
+        );
     }
     
     protected <FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass>
@@ -104,33 +123,15 @@ public abstract class RunecraftParser {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
         }
-        FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
         
-        RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
-        if (secondArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, secondArgument.remainingTokens());
-            return error;
-        }
-        
-        SecondArgumentClass secondArgumentValue = secondArgumentClassClass.cast(secondArgument.get());
-        
-        RunecraftResult<?> thirdArgument = readArgument(thirdArgumentClassClass, secondArgument.remainingTokens());
-        if (thirdArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, thirdArgument.remainingTokens());
-            return error;
-        }
-        ThirdArgumentClass thirdArgumentValue = thirdArgumentClassClass.cast(thirdArgument.get());
-        
-        RunecraftResult<?> fourthArgument = readArgument(fourthArgumentClassClass, thirdArgument.remainingTokens());
-        if (fourthArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, fourthArgument.remainingTokens());
-            return error;
-        }
-        
-        FourthArgumentClass fourthArgumentValue = fourthArgumentClassClass.cast(fourthArgument.get());
-        
-        Object toReturn = function.apply(firstArgumentValue, secondArgumentValue, thirdArgumentValue, fourthArgumentValue);
-        return new RunecraftResult<>(toReturn, fourthArgument.remainingTokens());
+        return doTriFunction(
+                secondArgumentClassClass,
+                thirdArgumentClassClass,
+                fourthArgumentClassClass,
+                (secondArgument, thirdArgument, fourthArgument) ->
+                        function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument, fourthArgument),
+                tokens
+        );
         
     }
     
@@ -163,18 +164,14 @@ public abstract class RunecraftParser {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
         }
-        FirstArgumentClass firstArgumentValue = firstArgumentClassClass.cast(firstArgument.get());
         
-        RunecraftResult<?> secondArgument = readArgument(secondArgumentClassClass, firstArgument.remainingTokens());
-        if (secondArgument instanceof RunecraftErrorResult error) {
-            error.addStackTrace(tokens, secondArgument.remainingTokens());
-            return error;
-        }
         
-        SecondArgumentClass secondArgumentValue = secondArgumentClassClass.cast(secondArgument.get());
-        
-        consumer.accept(firstArgumentValue, secondArgumentValue);
-        return new RunecraftEmptyResult(secondArgument.remainingTokens());
+        return doConsumer(
+                secondArgumentClassClass,
+                (secondArgument) ->
+                        consumer.accept(firstArgumentClassClass.cast(firstArgument), secondArgument),
+                tokens
+        );
         
     }
     
