@@ -1,12 +1,13 @@
-package runecraft.parser;
+package runecraft.builtins;
 
 import runecraft.error.RunecraftError;
 import runecraft.result.RunecraftErrorResult;
 import runecraft.result.RunecraftResult;
+import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
 public class RunecraftBuiltins {
-    public static RunecraftResult<?> combineSubstances(Substance first, Substance second) {
+    public RunecraftResult<?> combineSubstances(Substance first, Substance second) {
         Substance toReturn = Substance.combine(first, second);
         if (toReturn == null) {
             return new RunecraftErrorResult(
@@ -16,5 +17,9 @@ public class RunecraftBuiltins {
             );
         }
         return new RunecraftResult<>(toReturn, "");
+    }
+    
+    public void shoot(RunecraftObject object) {
+        
     }
 }

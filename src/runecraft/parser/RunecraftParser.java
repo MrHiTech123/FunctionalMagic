@@ -1,5 +1,7 @@
 package runecraft.parser;
 
+import runecraft.builtins.RunecraftBuiltins;
+import runecraft.builtins.RunecraftPrinterBuiltins;
 import runecraft.datastructure.functionalinterface.QuadFunction;
 import runecraft.datastructure.functionalinterface.TriFunction;
 import runecraft.error.RunecraftError;
@@ -9,15 +11,12 @@ import runecraft.variables.Bolt;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-public abstract class RunecraftParser {
+public class RunecraftParser {
     private final FunctionCaller caller;
-    public RunecraftParser() {
+    private final RunecraftBuiltins builtins;
+    public RunecraftParser(RunecraftBuiltins builtins) {
         this.caller = new FunctionCaller(this);
+        this.builtins = builtins;
     }
     
     public boolean compareToken(String tokens, String target) {
@@ -26,9 +25,6 @@ public abstract class RunecraftParser {
         return firstTokens.equals(target);
         
     }
-    
-    abstract void shoot(RunecraftObject objectShot);
-    
     
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
@@ -86,7 +82,7 @@ public abstract class RunecraftParser {
             }
             
         else if (compareToken(tokens, "🜑")) {
-            return caller.biFunction(Substance.class, Substance.class, RunecraftBuiltins::combineSubstances, tokens.substring("🜑".length()));
+            return caller.biFunction(Substance.class, Substance.class, builtins::combineSubstances, tokens.substring("🜑".length()));
             
         }
             
@@ -104,7 +100,7 @@ public abstract class RunecraftParser {
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
             
-            return caller.consumer(RunecraftObject.class, this::shoot, leftoverTokens);
+            return caller.consumer(RunecraftObject.class, builtins::shoot, leftoverTokens);
             
         }
         else if (compareToken(tokens, "🜼")) {
@@ -148,6 +144,24 @@ public abstract class RunecraftParser {
             System.err.println(error.get());
         }
         
+    }
+    
+    public static void main(String[] args) {
+        RunecraftParser parser = new RunecraftParser(new RunecraftPrinterBuiltins());
+        //
+        // RunecraftResult<?> resultAddSuccess = parser.parse("⊢🝯🝰🝯⊢🝯🝰🝯⊢🝯🝰🝯|🜂🝰🝯");
+        // //RunecraftResult<?> resultAddFailure = parser.parse("⊢🝯🝰🝯⊢🝯🝰🝯⊢🝯🝰🝯|🜂🝰🝯");
+        // System.out.println(resultAddSuccess.get());
+        // // System.out.println(resultAddFailure.get());
+        // RunecraftResult<?> result = parser.runProgramRecursive("🝰🝯🝰🝯");
+        // System.out.println(result.get());
+        parser.runProgram("🝭🝏🜂");
+        parser.runProgram("🝏🜂🝯.🝯.🝯");
+        parser.runProgram("🝭🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
+        parser.runProgram("🝭🝏🜑🜂🜂");
+        parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
+        parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
+        parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
     }
     
     
