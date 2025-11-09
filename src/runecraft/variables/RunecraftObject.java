@@ -18,6 +18,6 @@ public abstract class RunecraftObject {
     
     @Override
     public String toString() {
-        return toStringWithoutAddress() + "-@" + String.valueOf(hashCode());
+        return toStringWithoutAddress() + "_@" + String.valueOf(hashCode());
     }
 }

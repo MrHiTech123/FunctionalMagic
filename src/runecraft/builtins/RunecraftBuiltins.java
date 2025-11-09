@@ -33,7 +33,7 @@ public class RunecraftBuiltins {
     public RunecraftResult<?> shoot(RunecraftObject object) {
         if (!object.exists()) return new RunecraftErrorResult(
                 RunecraftError.NonExistanceError,
-                "Tried to shoot object " + object + " which does not exist",
+                "Failed to shoot object " + object + ", object does not exist",
                 ""
         );
         return new RunecraftEmptyResult("");

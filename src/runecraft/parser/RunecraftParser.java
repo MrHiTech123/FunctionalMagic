@@ -158,7 +158,7 @@ public class RunecraftParser {
             error.addStackTrace(tokens, "");
             System.err.println(error.get());
         }
-        
+        System.out.println();
     }
     
     public static void main(String[] args) {
