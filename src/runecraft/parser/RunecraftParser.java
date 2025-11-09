@@ -153,7 +153,7 @@ public class RunecraftParser {
         if (!result.remainingTokens().isEmpty()) {
             result.addWarning(RunecraftWarningType.TrailingTokensWarning, "Trailing tokens \"" + result.remainingTokens() + "\"");
         }
-        System.err.println(result.getWarnings());
+        System.err.print(result.getWarnings());
         if (result instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, "");
             System.err.println(error.get());
@@ -171,7 +171,9 @@ public class RunecraftParser {
         // parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
         
         parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝰");
-        parser.runProgram("🝭🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
+        parser.runProgram("🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
+        
+        parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
         
     }
