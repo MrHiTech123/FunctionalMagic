@@ -217,12 +217,12 @@ public class RunecraftParser {
         // parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
         // parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
         
-        parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝰");
-        parser.runProgram("🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
+        // parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝰");
+        // parser.runProgram("🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
+        //
+        // parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
-        parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
-        
-        parser.runProgram(">🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
+        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
         
         
     }

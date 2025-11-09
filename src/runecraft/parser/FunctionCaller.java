@@ -59,8 +59,11 @@ public class FunctionCaller {
         
         
         if (result instanceof RunecraftResult<?> runecraftResult) {
-            if (runecraftResult instanceof RunecraftErrorResult || runecraftResult instanceof RunecraftEmptyResult) {
+            if (runecraftResult instanceof RunecraftErrorResult) {
                 return runecraftResult;
+            }
+            if (runecraftResult instanceof RunecraftEmptyResult) {
+                return new RunecraftEmptyResult(argument.remainingTokens());
             }
             return new RunecraftResult<>(runecraftResult.get(), argument.remainingTokens());
         }
