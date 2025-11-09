@@ -182,6 +182,9 @@ public class RunecraftParser {
             return result;
             
         }
+        else if (RunecraftMemory.isVarName(tokens.charAt(0))) {
+            return new RunecraftResult<>(memory.getVariable(tokens.charAt(0)), tokens.substring(1));
+        }
         else {
             return new RunecraftErrorResult(
                     RunecraftError.SyntaxError, 
