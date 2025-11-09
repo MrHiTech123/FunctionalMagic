@@ -152,6 +152,36 @@ public class RunecraftParser {
                     memory
             );
         }
+        else if (compareToken(tokens, ">")) {
+            RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
+            String tokensAfterVarName = toAssign.remainingTokens().substring(1);
+            
+            if (toAssign instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens, tokensAfterVarName);
+                return error;
+            }
+            if (toAssign instanceof RunecraftEmptyResult) {
+                return new RunecraftErrorResult(
+                        RunecraftError.TypeError,
+                        "Tried to assign empty result to variable",
+                        tokensAfterVarName
+                );
+            }
+            
+            char varName = toAssign.remainingTokens().charAt(0);
+            boolean successfullySet = memory.setVariable(varName, toAssign.get());
+            if (!successfullySet) {
+                return new RunecraftErrorResult(
+                        RunecraftError.VarNameError,
+                        "Failed to assign " + toAssign.get() + " to variable " + varName,
+                        tokensAfterVarName
+                );
+            }
+            RunecraftResult<?> result = runProgramRecursive(tokensAfterVarName, memory);
+            memory.popVariable(varName);
+            return result;
+            
+        }
         else {
             return new RunecraftErrorResult(
                     RunecraftError.SyntaxError, 
@@ -188,6 +218,8 @@ public class RunecraftParser {
         parser.runProgram("🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
         
         parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
+        
+        parser.runProgram(">🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
         
         
     }

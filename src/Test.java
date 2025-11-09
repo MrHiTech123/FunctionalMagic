@@ -22,18 +22,18 @@ public class Test {
         System.out.println(memory.setVariable('ⲁ', new RunecraftResult<>("Small letter!", "")));
         System.out.println(memory.setVariable('Ⲁ', new RunecraftResult<>("Big letter!", "")));
         
-        System.out.println(memory.getVariable('ⲁ').get());
-        System.out.println(memory.getVariable('Ⲁ').get());
+        System.out.println(memory.getVariable('ⲁ'));
+        System.out.println(memory.getVariable('Ⲁ'));
         
         System.out.println(memory.popVariable('ⲁ'));
         
         // System.out.println(memory.getVariable('ⲁ').get());
-        System.out.println(memory.getVariable('Ⲁ').get());
+        System.out.println(memory.getVariable('Ⲁ'));
         
         System.out.println(memory.popVariable('Ⲁ'));
         
         // System.out.println(memory.getVariable('ⲁ').get());
-        System.out.println(memory.getVariable('Ⲁ').get());
+        System.out.println(memory.getVariable('Ⲁ'));
         
         
         

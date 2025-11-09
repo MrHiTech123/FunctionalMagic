@@ -4,5 +4,6 @@ public enum RunecraftError {
     NonExistanceError,
     RecipeError,
     SyntaxError,
-    TypeError;
+    TypeError,
+    VarNameError
 }

@@ -9,10 +9,10 @@ public class RunecraftMemory {
     private static final char[] GLOBAL_LETTERS = "ⳎⲰⲈⲢⲦⲨⳘⲒⲞⲠⲀⲊⲆⲜⲄⲎⳢⲔⲖⲌⲬⲤⳔⲂⲚⲘ".toCharArray();
     private static final char[] LOCAL_LETTERS = "ⳏⲱⲉⲣⲧⲩⳙⲓⲟⲡⲁⲋⲇⲝⲅⲏⳣⲕⲗⲍⲭⲥⳕⲃⲛⲙ".toCharArray();
     
-    private Map<Character, RunecraftResult<?>> GLOBALS = new HashMap<>();
-    private Map<Character, Queue<RunecraftResult<?>>> LOCALS = new HashMap<>();
+    private Map<Character, Object> GLOBALS = new HashMap<>();
+    private Map<Character, Queue<Object>> LOCALS = new HashMap<>();
     
-    private static Queue<RunecraftResult<?>> lifoQueue() {
+    private static Queue<Object> lifoQueue() {
         return Collections.asLifoQueue(new LinkedList<>());
     }
     
@@ -34,15 +34,15 @@ public class RunecraftMemory {
         return isGlobalVar(name) || isLocalVar(name);
     }
     
-    private void setGlobalVar(char variable, RunecraftResult<?> value) {
+    private void setGlobalVar(char variable, Object value) {
         GLOBALS.put(variable, value);
     }
     
-    private void setLocalVar(char variable, RunecraftResult<?> value) {
+    private void setLocalVar(char variable, Object value) {
         LOCALS.get(variable).add(value);
     }
     
-    public boolean setVariable(char variable, RunecraftResult<?> value) {
+    public boolean setVariable(char variable, Object value) {
         if (isGlobalVar(variable)) {
             setGlobalVar(variable, value);
             return true;
@@ -55,12 +55,12 @@ public class RunecraftMemory {
     }
     
     
-    public RunecraftResult<?> getVariable(char variable) {
+    public Object getVariable(char variable) {
         if (isGlobalVar(variable)) {
             return GLOBALS.getOrDefault(variable, null);
         }
         else if (isLocalVar(variable)) {
-            Queue<RunecraftResult<?>> variableStack = LOCALS.get(variable);
+            Queue<?> variableStack = LOCALS.get(variable);
             if (variableStack.isEmpty()) return null;
             return variableStack.peek();
         }
@@ -70,7 +70,7 @@ public class RunecraftMemory {
     public boolean popVariable(char variable) {
         if (!isLocalVar(variable)) return false;
         
-        Queue<RunecraftResult<?>> variableStack = LOCALS.get(variable);
+        Queue<Object> variableStack = LOCALS.get(variable);
         if (variableStack.isEmpty()) return false;
         
         variableStack.remove();
