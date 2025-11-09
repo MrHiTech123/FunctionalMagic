@@ -6,6 +6,7 @@ import runecraft.error.RunecraftError;
 import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
 import runecraft.variables.Bolt;
+import runecraft.variables.Cone;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
@@ -83,7 +84,6 @@ public class RunecraftParser {
             return caller.biFunction(Substance.class, Substance.class, builtins::combineSubstances, tokens.substring("🜑".length()));
             
         }
-            
         else if (compareToken(tokens, "🝏")) {
             return caller.quadFunction(
                     Substance.class,
@@ -92,6 +92,16 @@ public class RunecraftParser {
                     Integer.class,
                     Bolt::new,
                     tokens.substring("🝏".length())
+            );
+        }
+        else if (compareToken(tokens, "🜎")) {
+            return caller.quadFunction(
+                    Substance.class,
+                    Integer.class,
+                    Integer.class,
+                    Integer.class,
+                    Cone::new,
+                    tokens.substring("🜎".length())
             );
         }
         else if (compareToken(tokens, "🝧")) {
@@ -160,7 +170,9 @@ public class RunecraftParser {
         // parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
         // parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
         
-        parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝯🝯");
+        parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝰");
+        parser.runProgram("🝭🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
+        
         
     }
     

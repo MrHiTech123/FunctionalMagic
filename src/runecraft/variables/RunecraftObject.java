@@ -14,8 +14,10 @@ public abstract class RunecraftObject {
         this.exists = true;
     }
     
+    public abstract String toStringWithoutAddress();
+    
     @Override
     public String toString() {
-        return "-@" + String.valueOf(hashCode());
+        return toStringWithoutAddress() + "-@" + String.valueOf(hashCode());
     }
 }
