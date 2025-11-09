@@ -79,10 +79,13 @@ public class RunecraftParser {
             else if (compareToken(tokens, "♀")) {
                 return new RunecraftResult<>(Substance.FLESH, tokens.substring("♀".length()));
             }
-            
         else if (compareToken(tokens, "🜑")) {
-            return caller.biFunction(Substance.class, Substance.class, builtins::combineSubstances, tokens.substring("🜑".length()));
-            
+            return caller.biFunction(
+                    Substance.class,
+                    Substance.class, 
+                    builtins::combineSubstances, 
+                    tokens.substring("🜑".length())
+            );
         }
         else if (compareToken(tokens, "🝏")) {
             return caller.quadFunction(
