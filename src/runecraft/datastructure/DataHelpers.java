@@ -2,6 +2,7 @@ package runecraft.datastructure;
 
 import runecraft.variables.Substance;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -27,5 +28,27 @@ public class DataHelpers {
         }
         return toReturn;
     }
-
+    
+    public static <T> boolean linearSearch(Iterable<T> haystack, T needle) {
+        for (T elem : haystack) {
+            if (elem.equals(needle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static <T> boolean linearSearch(T[] haystack, T needle) {
+        return linearSearch(Arrays.asList(haystack), needle);
+    }
+    
+    
+    public static boolean linearSearch(char[] haystack, char needle) {
+        for (char c : haystack) {
+            if (c == needle) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
