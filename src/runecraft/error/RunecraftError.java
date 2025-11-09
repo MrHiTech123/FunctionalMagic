@@ -5,5 +5,6 @@ public enum RunecraftError {
     RecipeError,
     SyntaxError,
     TypeError,
+    UndefinedVariableError,
     VarNameError
 }

@@ -183,7 +183,16 @@ public class RunecraftParser {
             
         }
         else if (RunecraftMemory.isVarName(tokens.charAt(0))) {
-            return new RunecraftResult<>(memory.getVariable(tokens.charAt(0)), tokens.substring(1));
+            Object result = memory.getVariable(tokens.charAt(0));
+            if (result == null) {
+                return new RunecraftErrorResult(
+                        RunecraftError.UndefinedVariableError,
+                        "Undefined variable " + tokens.charAt(0),
+                        tokens.substring(1)
+                );
+            }
+            
+            return new RunecraftResult<>(result, tokens.substring(1));
         }
         else {
             return new RunecraftErrorResult(
@@ -223,6 +232,8 @@ public class RunecraftParser {
         // parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
         parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
+        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
+        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
         
         
     }
