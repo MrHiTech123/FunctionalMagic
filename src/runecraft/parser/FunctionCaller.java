@@ -6,6 +6,7 @@ import runecraft.error.RunecraftError;
 import runecraft.result.RunecraftEmptyResult;
 import runecraft.result.RunecraftErrorResult;
 import runecraft.result.RunecraftResult;
+import runecraft.variables.RunecraftMemory;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -18,15 +19,14 @@ public class FunctionCaller {
     public FunctionCaller(RunecraftParser parser) {
         this.parser = parser;
     }
-    
-        private <T> String nameFromClass(Class<T> clazz) {
+    private <T> String nameFromClass(Class<T> clazz) {
         String fullName = clazz.getName();
         return fullName.substring(fullName.lastIndexOf('.') + 1);
     }
     
     protected <ArgumentClass>
-    RunecraftResult<?> readArgument(Class<ArgumentClass> argumentClassClass, String tokens) {
-        RunecraftResult<?> result = parser.runProgramRecursive(tokens);
+    RunecraftResult<?> readArgument(Class<ArgumentClass> argumentClassClass, String tokens, RunecraftMemory memory) {
+        RunecraftResult<?> result = parser.runProgramRecursive(tokens, memory);
         if (result instanceof RunecraftErrorResult error) {
             return error;
         }
@@ -47,9 +47,10 @@ public class FunctionCaller {
     RunecraftResult<?> function(
             Class<ArgumentClass> argumentClassClass, 
             Function<ArgumentClass, ?> function, 
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
+        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens, memory);
         if (argument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, argument.remainingTokens());
             return error;
@@ -73,9 +74,10 @@ public class FunctionCaller {
             Class<FirstArgumentClass> firstArgumentClassClass,
             Class<SecondArgumentClass> secondArgumentClassClass,
             BiFunction<FirstArgumentClass, SecondArgumentClass, ?> function,
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens, memory);
         if (firstArgument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
@@ -85,7 +87,8 @@ public class FunctionCaller {
                 secondArgumentClassClass,
                 (secondArgument) -> 
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument),
-                firstArgument.remainingTokens()
+                firstArgument.remainingTokens(),
+                memory
         );
         
     }
@@ -96,9 +99,10 @@ public class FunctionCaller {
             Class<SecondArgumentClass> secondArgumentClassClass,
             Class<ThirdArgumentClass> thirdArgumentClassClass,
             TriFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, ?> function,
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens, memory);
         if (firstArgument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
@@ -109,7 +113,8 @@ public class FunctionCaller {
                 thirdArgumentClassClass,
                 (secondArgument, thirdArgument) -> 
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument),
-                firstArgument.remainingTokens()
+                firstArgument.remainingTokens(),
+                memory
         );
     }
     
@@ -120,9 +125,10 @@ public class FunctionCaller {
             Class<ThirdArgumentClass> thirdArgumentClassClass,
             Class<FourthArgumentClass> fourthArgumentClassClass,
             QuadFunction<FirstArgumentClass, SecondArgumentClass, ThirdArgumentClass, FourthArgumentClass, ?> function,
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens, memory);
         if (firstArgument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
@@ -134,7 +140,8 @@ public class FunctionCaller {
                 fourthArgumentClassClass,
                 (secondArgument, thirdArgument, fourthArgument) ->
                         function.apply(firstArgumentClassClass.cast(firstArgument.get()), secondArgument, thirdArgument, fourthArgument),
-                firstArgument.remainingTokens()
+                firstArgument.remainingTokens(),
+                memory
         );
         
     }
@@ -143,9 +150,10 @@ public class FunctionCaller {
     RunecraftResult<?> consumer(
             Class<ArgumentClass> argumentClassClass, 
             Consumer<ArgumentClass> consumer, 
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens);
+        RunecraftResult<?> argument = readArgument(argumentClassClass, tokens, memory);
         if (argument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, argument.remainingTokens());
             return error;
@@ -161,9 +169,10 @@ public class FunctionCaller {
             Class<FirstArgumentClass> firstArgumentClassClass,
             Class<SecondArgumentClass> secondArgumentClassClass,
             BiConsumer<FirstArgumentClass, SecondArgumentClass> consumer,
-            String tokens
+            String tokens,
+            RunecraftMemory memory
     ) {
-        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens);
+        RunecraftResult<?> firstArgument = readArgument(firstArgumentClassClass, tokens, memory);
         if (firstArgument instanceof RunecraftErrorResult error) {
             error.addStackTrace(tokens, firstArgument.remainingTokens());
             return error;
@@ -174,7 +183,8 @@ public class FunctionCaller {
                 secondArgumentClassClass,
                 (secondArgument) ->
                         consumer.accept(firstArgumentClassClass.cast(firstArgument), secondArgument),
-                firstArgument.remainingTokens()
+                firstArgument.remainingTokens(),
+                memory
         );
         
     }

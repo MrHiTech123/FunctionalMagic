@@ -30,6 +30,7 @@ public class RunecraftBuiltins {
         return object;
     }
     
+    
     public RunecraftResult<?> shoot(RunecraftObject object) {
         if (!object.exists()) return new RunecraftErrorResult(
                 RunecraftError.NonExistanceError,

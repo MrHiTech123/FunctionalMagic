@@ -5,10 +5,7 @@ import runecraft.builtins.RunecraftPrinterBuiltins;
 import runecraft.error.RunecraftError;
 import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
-import runecraft.variables.Bolt;
-import runecraft.variables.Cone;
-import runecraft.variables.RunecraftObject;
-import runecraft.variables.Substance;
+import runecraft.variables.*;
 
 public class RunecraftParser {
     private final FunctionCaller caller;
@@ -51,7 +48,7 @@ public class RunecraftParser {
         return new RunecraftResult<>(resultNum, numberParsed.remainingTokens());
     }
     
-    public RunecraftResult<?> runProgramRecursive(String tokens) {
+    public RunecraftResult<?> runProgramRecursive(String tokens, RunecraftMemory memory) {
         
         if (tokens.isEmpty()) {
             return new RunecraftErrorResult(
@@ -84,7 +81,8 @@ public class RunecraftParser {
                     Substance.class,
                     Substance.class, 
                     builtins::combineSubstances, 
-                    tokens.substring("🜑".length())
+                    tokens.substring("🜑".length()),
+                    memory
             );
         }
         else if (compareToken(tokens, "🝏")) {
@@ -94,7 +92,8 @@ public class RunecraftParser {
                     Integer.class,
                     Integer.class,
                     Bolt::new,
-                    tokens.substring("🝏".length())
+                    tokens.substring("🝏".length()),
+                    memory
             );
         }
         else if (compareToken(tokens, "🜎")) {
@@ -104,31 +103,37 @@ public class RunecraftParser {
                     Integer.class,
                     Integer.class,
                     Cone::new,
-                    tokens.substring("🜎".length())
+                    tokens.substring("🜎".length()),
+                    memory
             );
         }
         else if (compareToken(tokens, "🝧")) {
             return caller.function(
                     RunecraftObject.class,
                     builtins::create,
-                    tokens.substring("🝧".length())
+                    tokens.substring("🝧".length()),
+                    memory
             );
         }
         
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
-            
-            return caller.function(RunecraftObject.class, builtins::shoot, leftoverTokens);
+            return caller.function(
+                    RunecraftObject.class, 
+                    builtins::shoot, 
+                    leftoverTokens, 
+                    memory
+            );
             
         }
         else if (compareToken(tokens, "🜼")) {
             String argumentTokens = tokens.substring("🜼".length());
-            RunecraftResult<?> firstResult = runProgramRecursive(argumentTokens);
+            RunecraftResult<?> firstResult = runProgramRecursive(argumentTokens, memory);
             if (firstResult instanceof RunecraftErrorResult error) {
                 error.addStackTrace(argumentTokens, firstResult.remainingTokens());
                 return error;
             }
-            RunecraftResult<?> secondResult = runProgramRecursive(firstResult.remainingTokens());
+            RunecraftResult<?> secondResult = runProgramRecursive(firstResult.remainingTokens(), memory);
             if (secondResult instanceof RunecraftErrorResult error) {
                 error.addStackTrace(firstResult.remainingTokens(), secondResult.remainingTokens());
                 return error;
@@ -139,7 +144,13 @@ public class RunecraftParser {
             return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
-            return caller.biFunction(Integer.class, Integer.class, Integer::sum, tokens.substring("⊢".length()));
+            return caller.biFunction(
+                    Integer.class, 
+                    Integer.class, 
+                    Integer::sum, 
+                    tokens.substring("⊢".length()),
+                    memory
+            );
         }
         else {
             return new RunecraftErrorResult(
@@ -151,7 +162,7 @@ public class RunecraftParser {
     }
     
     public void runProgram(String tokens) {
-        RunecraftResult<?> result = runProgramRecursive(tokens);
+        RunecraftResult<?> result = runProgramRecursive(tokens, new RunecraftMemory());
         
         if (!result.remainingTokens().isEmpty()) {
             result.addWarning(RunecraftWarningType.TrailingTokensWarning, "Trailing tokens \"" + result.remainingTokens() + "\"");
