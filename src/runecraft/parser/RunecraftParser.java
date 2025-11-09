@@ -152,6 +152,33 @@ public class RunecraftParser {
                     memory
             );
         }
+        else if (compareToken(tokens, "⊣")) {
+            return caller.biFunction(
+                    Integer.class, 
+                    Integer.class,
+                    (a, b) -> a - b, 
+                    tokens.substring("⊣".length()),
+                    memory
+            );
+        }
+        else if (compareToken(tokens, "⊤")) {
+            return caller.biFunction(
+                    Integer.class, 
+                    Integer.class,
+                    (a, b) -> a * b, 
+                    tokens.substring("⊤".length()),
+                    memory
+            );
+        }
+        else if (compareToken(tokens, "⊥")) {
+            return caller.biFunction(
+                    Integer.class, 
+                    Integer.class, 
+                    (a, b) -> a / b, 
+                    tokens.substring("⊥".length()),
+                    memory
+            );
+        }
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
             String tokensAfterVarName = toAssign.remainingTokens().substring(1);
@@ -232,8 +259,9 @@ public class RunecraftParser {
         // parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
         parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
-        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
         parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
+        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
+        parser.runProgram(">🜑🜂🜄ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
         
         
     }
