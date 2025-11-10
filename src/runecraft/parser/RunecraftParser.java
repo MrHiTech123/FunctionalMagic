@@ -140,7 +140,7 @@ public class RunecraftParser {
             }
             return new RunecraftEmptyResult(secondResult.remainingTokens());
         }
-        else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯")) {
+        else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯") || compareToken(tokens, ".")) {
             return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
@@ -181,6 +181,8 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
+            // System.out.println(toAssign.get());
+            System.out.println(toAssign.remainingTokens());
             String tokensAfterVarName = toAssign.remainingTokens().substring(1);
             
             if (toAssign instanceof RunecraftErrorResult error) {
@@ -258,10 +260,11 @@ public class RunecraftParser {
         //
         // parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
-        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
-        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
-        parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
-        parser.runProgram(">🜑🜂🜄ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
+        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
+        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
+        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
+        // parser.runProgram(">🜑🜂🜄ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
+        parser.runProgram("🝭🝧🝏🜂...");
         
         
     }
