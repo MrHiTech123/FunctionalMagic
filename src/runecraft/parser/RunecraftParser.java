@@ -223,6 +223,49 @@ public class RunecraftParser {
             
             return new RunecraftResult<>(result, tokens.substring(1));
         }
+        else if (compareToken(tokens, "🝓")) {
+            String remainingTokens = tokens.substring("🝓".length());
+            RunecraftResult<?> startResult = caller.readArgument(Integer.class, remainingTokens, memory);
+            if (startResult instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens, error.remainingTokens());
+                return error;
+            }
+            
+            char varName = startResult.remainingTokens().charAt(0);
+            RunecraftResult<?> endResult = caller.readArgument(
+                    Integer.class,
+                    startResult.remainingTokens().substring(1),
+                    memory
+            );
+            
+            int start = (int)startResult.get();
+            int end = (int)endResult.get();
+            String internalTokens = endResult.remainingTokens();
+            boolean anythingWasRun = false;
+            RunecraftResult<?> result = null;
+            
+            for (int i = start; i <= end; ++i) {
+                anythingWasRun = true;
+                memory.setVariable(varName, i);
+                result = runProgramRecursive(internalTokens, memory);
+                memory.popVariable(varName);
+                if (result instanceof RunecraftErrorResult error) {
+                    error.addStackTrace(tokens, error.remainingTokens());
+                    return error;
+                }
+            }
+            
+            if (anythingWasRun) {
+                assert result != null;
+                return new RunecraftEmptyResult(result.remainingTokens());
+            }
+            else {
+                return new RunecraftErrorResult(RunecraftError.ForLoopNotRunError, "For loop body was never run", endResult.remainingTokens());
+            }
+            
+            
+            
+        }
         else {
             return new RunecraftErrorResult(
                     RunecraftError.SyntaxError, 
@@ -265,6 +308,8 @@ public class RunecraftParser {
         // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
         // parser.runProgram(">🜑🜂🜄ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
         parser.runProgram("🝭🝧🝏🜂...");
+        parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜂⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
+        
         
         
     }

@@ -4,6 +4,7 @@ import runecraft.error.RunecraftError;
 import runecraft.result.RunecraftEmptyResult;
 import runecraft.result.RunecraftErrorResult;
 import runecraft.result.RunecraftResult;
+import runecraft.variables.RunecraftMemory;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
@@ -39,6 +40,8 @@ public class RunecraftBuiltins {
         );
         return new RunecraftEmptyResult("");
     }
+    
+    
     
     
     
