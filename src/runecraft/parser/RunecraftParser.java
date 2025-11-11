@@ -181,8 +181,6 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
-            // System.out.println(toAssign.get());
-            System.out.println(toAssign.remainingTokens());
             String tokensAfterVarName = toAssign.remainingTokens().substring(1);
             
             if (toAssign instanceof RunecraftErrorResult error) {
@@ -306,9 +304,16 @@ public class RunecraftParser {
         // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
         // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
         // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
-        // parser.runProgram(">🜑🜂🜄ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
-        parser.runProgram("🝭🝧🝏🜂...");
-        parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜂⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
+        
+        // parser.runProgram("🝧🜎🜑🜄🜄🝰🝯🝰🝯.🝯🝯🝯🝯..");
+        // parser.runProgram("🝭🝏🜑🜄🜄🝰🝯🝰🝯.🝯🝯🝯🝯..");
+        //
+        
+        // parser.runProgram("🝭🝧🝏🜂...");
+        parser.runProgram(">🜑🜄🜁ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
+        parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜑♀🜍⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
+        
+        
         
         
         

@@ -60,7 +60,7 @@ public class RunecraftMemory {
             return GLOBALS.getOrDefault(variable, null);
         }
         else if (isLocalVar(variable)) {
-            Queue<?> variableStack = LOCALS.get(variable);
+            Queue<Object> variableStack = LOCALS.get(variable);
             if (variableStack.isEmpty()) return null;
             return variableStack.peek();
         }
