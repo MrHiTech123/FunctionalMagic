@@ -248,7 +248,7 @@ public class RunecraftParser {
                 result = runProgramRecursive(internalTokens, memory);
                 memory.popVariable(varName);
                 if (result instanceof RunecraftErrorResult error) {
-                    error.addStackTrace(tokens, error.remainingTokens());
+                    error.addStackTrace(internalTokens, error.remainingTokens());
                     return error;
                 }
             }
@@ -310,9 +310,10 @@ public class RunecraftParser {
         //
         
         // parser.runProgram("🝭🝧🝏🜂...");
-        parser.runProgram(">🜑🜄🜁ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
-        parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜑♀🜍⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
+        // parser.runProgram(">🜑🜄🜁ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
+        // parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜑♀🜍⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
         
+        parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
         
         
         
