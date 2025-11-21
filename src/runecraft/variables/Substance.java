@@ -46,7 +46,9 @@ public enum Substance {
     ORGAN_TISSUE(FLESH, AIR),
     PLANT_MATTER(FLESH, EARTH),
     NERVES(FLESH, MIND),
-    MUSCLE(FLESH, FLESH);
+    MUSCLE(FLESH, FLESH),
+    MADNESS(MIND, BLOOD),
+    NARCOTICS(PLANT_MATTER, MADNESS);
     
     
     private static final Map<Pair<Substance, Substance>, Substance> combinationRecipes = DataHelpers.mapOfValues(

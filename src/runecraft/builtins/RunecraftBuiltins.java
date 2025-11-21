@@ -26,6 +26,10 @@ public class RunecraftBuiltins {
         return object;
     }
     
+    public void assignPointer(RunecraftObject object) {
+        System.out.println("Assigned Pointer " + object);
+    }
+    
     public RunecraftObject create(RunecraftObject object) {
         object.instantiate(0, 0);
         return object;

@@ -8,10 +8,10 @@ import runecraft.result.*;
 import runecraft.variables.*;
 
 public class RunecraftParser {
-    private final FunctionCaller caller;
+    private final FunctionCaller call;
     private final RunecraftBuiltins builtins;
     public RunecraftParser(RunecraftBuiltins builtins) {
-        this.caller = new FunctionCaller(this);
+        this.call = new FunctionCaller(this);
         this.builtins = builtins;
     }
     
@@ -77,7 +77,7 @@ public class RunecraftParser {
                 return new RunecraftResult<>(Substance.FLESH, tokens.substring("♀".length()));
             }
         else if (compareToken(tokens, "🜑")) {
-            return caller.biFunction(
+            return call.biFunction(
                     Substance.class,
                     Substance.class, 
                     builtins::combineSubstances, 
@@ -86,7 +86,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "🝏")) {
-            return caller.quadFunction(
+            return call.quadFunction(
                     Substance.class,
                     Integer.class,
                     Integer.class,
@@ -97,7 +97,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "🜎")) {
-            return caller.quadFunction(
+            return call.quadFunction(
                     Substance.class,
                     Integer.class,
                     Integer.class,
@@ -108,7 +108,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "🝧")) {
-            return caller.function(
+            return call.function(
                     RunecraftObject.class,
                     builtins::create,
                     tokens.substring("🝧".length()),
@@ -118,7 +118,7 @@ public class RunecraftParser {
         
         else if (compareToken(tokens, "🝭")) {
             String leftoverTokens = tokens.substring("🝭".length());
-            return caller.function(
+            return call.function(
                     RunecraftObject.class, 
                     builtins::shoot, 
                     leftoverTokens, 
@@ -144,7 +144,7 @@ public class RunecraftParser {
             return parseNumber(tokens);
         }
         else if (compareToken(tokens, "⊢")) {
-            return caller.biFunction(
+            return call.biFunction(
                     Integer.class, 
                     Integer.class, 
                     Integer::sum, 
@@ -153,7 +153,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "⊣")) {
-            return caller.biFunction(
+            return call.biFunction(
                     Integer.class, 
                     Integer.class,
                     (a, b) -> a - b, 
@@ -162,7 +162,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "⊤")) {
-            return caller.biFunction(
+            return call.biFunction(
                     Integer.class, 
                     Integer.class,
                     (a, b) -> a * b, 
@@ -171,7 +171,7 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "⊥")) {
-            return caller.biFunction(
+            return call.biFunction(
                     Integer.class, 
                     Integer.class, 
                     (a, b) -> a / b, 
@@ -181,6 +181,7 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
+            
             String tokensAfterVarName = toAssign.remainingTokens().substring(1);
             
             if (toAssign instanceof RunecraftErrorResult error) {
@@ -193,6 +194,13 @@ public class RunecraftParser {
                         "Tried to assign empty result to variable",
                         tokensAfterVarName
                 );
+            }
+            
+            if (compareToken(toAssign.remainingTokens(), "🝊")) {
+                if (toAssign.get() instanceof RunecraftObject object) {
+                    builtins.assignPointer(object);
+                }
+                return new RunecraftEmptyResult(toAssign.remainingTokens().substring("🝊".length()));
             }
             
             char varName = toAssign.remainingTokens().charAt(0);
@@ -209,6 +217,9 @@ public class RunecraftParser {
             return result;
             
         }
+        else if (compareToken(tokens, "🝊")) {
+            return new RunecraftResult<>(new PointerObject(), tokens.substring("🝊".length()));
+        }
         else if (RunecraftMemory.isVarName(tokens.charAt(0))) {
             Object result = memory.getVariable(tokens.charAt(0));
             if (result == null) {
@@ -223,14 +234,14 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, "🝓")) {
             String remainingTokens = tokens.substring("🝓".length());
-            RunecraftResult<?> startResult = caller.readArgument(Integer.class, remainingTokens, memory);
+            RunecraftResult<?> startResult = call.readArgument(Integer.class, remainingTokens, memory);
             if (startResult instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens, error.remainingTokens());
                 return error;
             }
             
             char varName = startResult.remainingTokens().charAt(0);
-            RunecraftResult<?> endResult = caller.readArgument(
+            RunecraftResult<?> endResult = call.readArgument(
                     Integer.class,
                     startResult.remainingTokens().substring(1),
                     memory
@@ -289,31 +300,16 @@ public class RunecraftParser {
     
     public static void main(String[] args) {
         RunecraftParser parser = new RunecraftParser(new RunecraftPrinterBuiltins());
-        // parser.runProgram("🝭🝏🜂");
-        // parser.runProgram("🝏🜂🝯.🝯.🝯");
-        // parser.runProgram("🝭🝏🜑🜂🜂");
-        // parser.runProgram("🝭🝏🜑🝯🝰🝯🜂");
-        // parser.runProgram("⊢🝯🝰🝯🝰🝯🜂");
-        // parser.runProgram("🜼🝭🝏🜑🜂🜄🝭🝏🜑🜄🜂");
+        // parser.runProgram("🝭🝧🝏🜁🝯🝯🝯.🝰🝯🝰🝯..");
         
-        // parser.runProgram("🝭🝧🝏🜑🜄🜂🝯.🝯🝰🝯.🝰");
-        // parser.runProgram("🝧🜎🜑🜄♀🝯🝰🝯.🝯🝯🝯🝯.🝰");
-        //
-        // parser.runProgram("🝭🝏🜂🝯.🝰🝯🝰🝯.🝰");
         
-        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ");
-        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰Ⲁ🝭Ⲁ🝭Ⲁ");
-        // parser.runProgram("🜼>🝧🝏🜂🝯.🝯.🝰ⲁ🝭ⲁ🝭ⲁ");
+        parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🝭🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
+        parser.runProgram("🝭🝊");
+        parser.runProgram(">🝏🜂...🝊");
         
-        // parser.runProgram("🝧🜎🜑🜄🜄🝰🝯🝰🝯.🝯🝯🝯🝯..");
-        // parser.runProgram("🝭🝏🜑🜄🜄🝰🝯🝰🝯.🝯🝯🝯🝯..");
-        //
-        
-        // parser.runProgram("🝭🝧🝏🜂...");
-        // parser.runProgram(">🜑🜄🜁ⲙ>⊢🝯.🝯🝰🝯ⲇ>⊤🝰🝯🝯.🝰🝯ⲋ>⊤🝰🝰🝰🝯.🝯🝰🝯ⲁ🝭🝧🝏ⲙⲇⲋⲁ");
-        // parser.runProgram("🝓🝯ⲁ🝯🝯🝭🝧🝏🜑♀🜍⊤ⲁ🝰🝯🝰🝯⊣🝰🝰🝯ⲁⲁ");
-        
-        parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
+        // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
+        // // parser.runProgram(">⊣🝊🜑🜑♀🜃🜑🜍🜑🜄♀🝊");
+        // parser.runProgram("🝭🝧🝏🜑🜑♀🜃🜑🜍🜑🜄♀...");
         
         
         
