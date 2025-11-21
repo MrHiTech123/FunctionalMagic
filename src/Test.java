@@ -1,3 +1,4 @@
+import org.w3c.dom.ls.LSOutput;
 import runecraft.datastructure.Pair;
 import runecraft.result.RunecraftEmptyResult;
 import runecraft.result.RunecraftResult;
@@ -5,6 +6,18 @@ import runecraft.variables.RunecraftMemory;
 import runecraft.variables.Substance;
 
 import java.util.function.BiFunction;
+
+class A {
+    private int a;
+    public A(int a) {
+        this.a = a;
+    }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(a);
+    }
+}
 
 public class Test {
     public static void main(String[] args) {
@@ -35,6 +48,8 @@ public class Test {
         // System.out.println(memory.getVariable('ⲁ').get());
         System.out.println(memory.getVariable('Ⲁ'));
         
+        // A myA = (A)3;
+        // System.out.println(myA);
         
         
         

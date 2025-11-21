@@ -9,8 +9,9 @@ public class RunecraftMemory {
     private static final char[] GLOBAL_LETTERS = "ⳎⲰⲈⲢⲦⲨⳘⲒⲞⲠⲀⲊⲆⲜⲄⲎⳢⲔⲖⲌⲬⲤⳔⲂⲚⲘ".toCharArray();
     private static final char[] LOCAL_LETTERS = "ⳏⲱⲉⲣⲧⲩⳙⲓⲟⲡⲁⲋⲇⲝⲅⲏⳣⲕⲗⲍⲭⲥⳕⲃⲛⲙ".toCharArray();
     
-    private Map<Character, Object> GLOBALS = new HashMap<>();
-    private Map<Character, Queue<Object>> LOCALS = new HashMap<>();
+    private final PointerObject POINTER = new PointerObject();
+    private final Map<Character, Object> GLOBALS = new HashMap<>();
+    private final Map<Character, Queue<Object>> LOCALS = new HashMap<>();
     
     private static Queue<Object> lifoQueue() {
         return Collections.asLifoQueue(new LinkedList<>());
@@ -32,6 +33,14 @@ public class RunecraftMemory {
     
     public static boolean isVarName(char name) {
         return isGlobalVar(name) || isLocalVar(name);
+    }
+    
+    public void setPointer(RunecraftObject value) {
+        POINTER.setValue(value);
+    }
+    
+    public PointerObject getPointer() {
+        return POINTER;
     }
     
     private void setGlobalVar(char variable, Object value) {

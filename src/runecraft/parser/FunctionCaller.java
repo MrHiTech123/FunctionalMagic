@@ -19,10 +19,6 @@ public class FunctionCaller {
     public FunctionCaller(RunecraftParser parser) {
         this.parser = parser;
     }
-    private <T> String nameFromClass(Class<T> clazz) {
-        String fullName = clazz.getName();
-        return fullName.substring(fullName.lastIndexOf('.') + 1);
-    }
     
     protected <ArgumentClass>
     RunecraftResult<?> readArgument(Class<ArgumentClass> argumentClassClass, String tokens, RunecraftMemory memory) {
@@ -36,7 +32,7 @@ public class FunctionCaller {
         else {
             return new RunecraftErrorResult(
                     RunecraftError.TypeError,
-                    "Expected " + nameFromClass(argumentClassClass) + ", got " + nameFromClass(result.get().getClass()),
+                    "Expected " + RunecraftError.nameFromClass(argumentClassClass) + ", got " + RunecraftError.nameFromClass(result.get().getClass()),
                     result.remainingTokens()
             );
         }

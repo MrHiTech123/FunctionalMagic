@@ -182,7 +182,11 @@ public class RunecraftParser {
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
             
-            String tokensAfterVarName = toAssign.remainingTokens().substring(1);
+            
+            String tokensAfterVarName = "";
+            if (toAssign.remainingTokens().length() > 1) {
+                tokensAfterVarName = toAssign.remainingTokens().substring(1);
+            }
             
             if (toAssign instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens, tokensAfterVarName);
@@ -197,10 +201,20 @@ public class RunecraftParser {
             }
             
             if (compareToken(toAssign.remainingTokens(), "🝊")) {
+                String remainingTokens = toAssign.remainingTokens().substring("🝊".length());
                 if (toAssign.get() instanceof RunecraftObject object) {
                     builtins.assignPointer(object);
+                    memory.setPointer(object);
                 }
-                return new RunecraftEmptyResult(toAssign.remainingTokens().substring("🝊".length()));
+                else {
+                    return new RunecraftErrorResult(
+                            RunecraftError.TypeError, 
+                            "Expected RunecraftObject, got " + RunecraftError.nameFromClass(toAssign.get().getClass()),
+                            remainingTokens
+                    );
+                }
+                
+                return new RunecraftEmptyResult(remainingTokens);
             }
             
             char varName = toAssign.remainingTokens().charAt(0);
@@ -218,7 +232,7 @@ public class RunecraftParser {
             
         }
         else if (compareToken(tokens, "🝊")) {
-            return new RunecraftResult<>(new PointerObject(), tokens.substring("🝊".length()));
+            return new RunecraftResult<>(memory.getPointer(), tokens.substring("🝊".length()));
         }
         else if (RunecraftMemory.isVarName(tokens.charAt(0))) {
             Object result = memory.getVariable(tokens.charAt(0));
@@ -303,9 +317,11 @@ public class RunecraftParser {
         // parser.runProgram("🝭🝧🝏🜁🝯🝯🝯.🝰🝯🝰🝯..");
         
         
-        parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🝭🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
-        parser.runProgram("🝭🝊");
-        parser.runProgram(">🝏🜂...🝊");
+        // parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🝭🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
+        // parser.runProgram("🝭🝊");
+        // parser.runProgram(">🝏🜂...🝊");
+        
+        parser.runProgram("🜼🜼🝭🝊>🝏🜂...🝊🝭🝊");
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
         // // parser.runProgram(">⊣🝊🜑🜑♀🜃🜑🜍🜑🜄♀🝊");
