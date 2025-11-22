@@ -9,7 +9,7 @@ import runecraft.variables.Substance;
 public class RunecraftTypeCaster extends ExplicitTypeCaster {
     public RunecraftTypeCaster() {
         super(
-                new ClassClassFunctionTrio<>(Substance.class, RunecraftObject.class, SubstanceObject::new)
+                new ClassClassFunctionTrio<>(Substance.class, SubstanceObject.class, SubstanceObject::new)
         );
     }
 }
