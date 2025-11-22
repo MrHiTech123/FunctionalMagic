@@ -7,8 +7,16 @@ import java.util.function.Function;
 public class ExplicitTypeCaster {
     private static final Map<Class<?>, Map<Class<?>, Function<?, ?>>> typeCastings = new HashMap<>();
     
-    public ExplicitTypeCaster(ClassClassFunctionTrio<?, ?>... trios) {
-        for (ClassClassFunctionTrio<?, ?> trio : trios) {
+    /**
+     * @param castings: A series of trios. Each trio takes the following form:
+     *                 (Class A, Class B, (Function A -> B) F)
+     *                Each trio indicates that when an object of class A (or a subclass of A)
+     *                is cast to type B (or a superclass of B), this should be done by running the function F
+     *                on the object. <b>Order matters.</b> If you want to specify a superclass to be cast to
+     *                differently from one of its subclasses, put that superclass' trio <b>after</b> the subclass'
+     */
+    public ExplicitTypeCaster(ClassClassFunctionTrio<?, ?>... castings) {
+        for (ClassClassFunctionTrio<?, ?> trio : castings) {
             put(trio);
         }
     }
