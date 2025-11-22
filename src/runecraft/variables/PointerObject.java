@@ -17,6 +17,11 @@ public class PointerObject extends RunecraftObject {
     }
     
     @Override
+    public Substance getMaterial() {
+        return value.getMaterial();
+    }
+    
+    @Override
     public boolean exists() {
         return true;
     }

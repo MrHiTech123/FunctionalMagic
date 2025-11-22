@@ -12,6 +12,7 @@ public enum Substance {
     WATER(),
     MIND(),
     FLESH(),
+    UNKNOWN(),
     ACID(FIRE, WATER),
     LIGHT(FIRE, AIR),
     SMOKE(FIRE, EARTH),

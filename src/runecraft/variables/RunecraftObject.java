@@ -15,6 +15,7 @@ public abstract class RunecraftObject {
     }
     
     public abstract String toStringWithoutAddress();
+    public abstract Substance getMaterial();
     
     @Override
     public String toString() {

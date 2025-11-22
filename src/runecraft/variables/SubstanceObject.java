@@ -21,4 +21,9 @@ public class SubstanceObject extends RunecraftObject {
     public boolean exists() {
         return true;
     }
+    
+    @Override
+    public Substance getMaterial() {
+        return substance;
+    }
 }
