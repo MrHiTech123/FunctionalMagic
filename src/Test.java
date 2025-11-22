@@ -1,6 +1,6 @@
 import runecraft.parser.RunecraftTypeCaster;
 import runecraft.result.RunecraftResult;
-import runecraft.variables.EverySubstance;
+import runecraft.variables.SubstanceObject;
 import runecraft.variables.RunecraftMemory;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
@@ -55,7 +55,7 @@ public class Test {
         System.out.println(caster.cast("Hello world", Integer.class));
         System.out.println(caster.cast(10, Number.class));
         System.out.println(caster.cast(Substance.ACID, Substance.class));
-        System.out.println(caster.cast(Substance.ACID, EverySubstance.class));
+        System.out.println(caster.cast(Substance.ACID, SubstanceObject.class));
         System.out.println(caster.cast(Substance.ACID, RunecraftObject.class));
         System.out.println(caster.cast(Substance.ACID, Object.class));
         

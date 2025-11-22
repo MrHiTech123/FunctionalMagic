@@ -9,12 +9,18 @@ import java.util.List;
 public class RunecraftResult<T> {
     protected final T result;
     protected final String remainingTokens;
-    protected final List<RunecraftWarning> warnings = new LinkedList<>();
+    protected final List<RunecraftWarning> warnings;
     
-    public RunecraftResult(T result, String remainingTokens) {
+    public RunecraftResult(T result, String remainingTokens, List<RunecraftWarning> warnings) {
         this.result = result;
         this.remainingTokens = remainingTokens;
+        this.warnings = warnings;
     }
+    
+    public RunecraftResult(T result, String remainingTokens) {
+        this(result, remainingTokens, new LinkedList<>());
+    }
+    
     public T get() {
         return result;
     }

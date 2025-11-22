@@ -1,5 +1,6 @@
 package runecraft.parser;
 
+import runecraft.datastructure.explicittypecaster.ExplicitTypeCaster;
 import runecraft.datastructure.functionalinterface.QuadFunction;
 import runecraft.datastructure.functionalinterface.TriFunction;
 import runecraft.error.RunecraftError;
@@ -15,27 +16,33 @@ import java.util.function.Function;
 
 public class FunctionCaller {
     private final RunecraftParser parser;
+    private final ExplicitTypeCaster caster;
     
-    public FunctionCaller(RunecraftParser parser) {
+    public FunctionCaller(RunecraftParser parser, ExplicitTypeCaster caster) {
         this.parser = parser;
+        this.caster = caster;
     }
     
     protected <ArgumentClass>
     RunecraftResult<?> readArgument(Class<ArgumentClass> argumentClassClass, String tokens, RunecraftMemory memory) {
-        RunecraftResult<?> result = parser.runProgramRecursive(tokens, memory);
-        if (result instanceof RunecraftErrorResult error) {
+        RunecraftResult<?> readArgument = parser.runProgramRecursive(tokens, memory);
+        if (readArgument instanceof RunecraftErrorResult error) {
             return error;
         }
-        if (argumentClassClass.isInstance(result.get())) {
-            return result;
+        else if (readArgument instanceof RunecraftEmptyResult emptyResult) {
+            return new RunecraftErrorResult(RunecraftError.TypeError, "Expected return value, found none.", emptyResult.remainingTokens());
         }
-        else {
+        
+        ArgumentClass argument = caster.cast(readArgument.get(), argumentClassClass);
+        if (argument == null) {
             return new RunecraftErrorResult(
                     RunecraftError.TypeError,
-                    "Expected " + RunecraftError.nameFromClass(argumentClassClass) + ", got " + RunecraftError.nameFromClass(result.get().getClass()),
-                    result.remainingTokens()
+                    "Expected " + RunecraftError.nameFromClass(argumentClassClass) + ", got " + RunecraftError.nameFromClass(readArgument.get().getClass()),
+                    readArgument.remainingTokens()
             );
         }
+        
+        return new RunecraftResult<>(argument, readArgument.remainingTokens()); // TODO: RunecraftResult.copyDifferentValue() method
         
     }
     

@@ -11,7 +11,7 @@ public class RunecraftParser {
     private final FunctionCaller call;
     private final RunecraftBuiltins builtins;
     public RunecraftParser(RunecraftBuiltins builtins) {
-        this.call = new FunctionCaller(this);
+        this.call = new FunctionCaller(this, new RunecraftTypeCaster());
         this.builtins = builtins;
     }
     
@@ -322,6 +322,7 @@ public class RunecraftParser {
         // parser.runProgram(">🝏🜂...🝊");
         
         parser.runProgram("🜼🜼🝭🝊>🝏🜂...🝊🝭🝊");
+        parser.runProgram("🝭🜂");
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
         // // parser.runProgram(">⊣🝊🜑🜑♀🜃🜑🜍🜑🜄♀🝊");
