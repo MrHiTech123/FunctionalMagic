@@ -41,7 +41,6 @@ public class ExplicitTypeCaster {
     
     @SuppressWarnings("unchecked")
     private <T, R> Function<T, R> getCastingFunctionOnce(Class<T> keyClass, Class<R> valueClass) {
-        System.out.println(lineage(keyClass));
         if (lineage(keyClass).contains(valueClass)) return (a -> (R)a);
         if (!typeCastings.containsKey(keyClass)) return null;
         if (!typeCastings.get(keyClass).containsKey(valueClass)) return null;

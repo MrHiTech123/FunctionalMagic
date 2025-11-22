@@ -14,7 +14,7 @@ public class SubstanceObject extends RunecraftObject {
     
     @Override
     public String toString() {
-        return substance.toString();
+        return toStringWithoutAddress();
     }
     
     @Override
