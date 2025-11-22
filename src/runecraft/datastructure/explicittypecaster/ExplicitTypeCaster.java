@@ -27,27 +27,35 @@ public class ExplicitTypeCaster {
         }
     }
     
+    private static <T> List<Class<? super T>> lineage(Class<T> clazz) {
+        List<Class<? super T>> toReturn = new LinkedList<>();
+        Class<? super T> currentSuper = clazz;
+        while (true) {
+            toReturn.add(currentSuper);
+            if (currentSuper.equals(Object.class)) {
+                return toReturn;
+            }
+            currentSuper = currentSuper.getSuperclass();
+        }
+    }
     
     @SuppressWarnings("unchecked")
     private <T, R> Function<T, R> getCastingFunctionOnce(Class<T> keyClass, Class<R> valueClass) {
-        if (keyClass.equals(valueClass)) return (a -> (R)a);
+        System.out.println(lineage(keyClass));
+        if (lineage(keyClass).contains(valueClass)) return (a -> (R)a);
         if (!typeCastings.containsKey(keyClass)) return null;
         if (!typeCastings.get(keyClass).containsKey(valueClass)) return null;
         return (Function<T, R>) typeCastings.get(keyClass).get(valueClass);
     }
     
     private <T, R> Function<? super T, R> getCastingFunction(Class<T> keyClass, Class<R> returnClass) {
-        Class<? super T> currentClass = keyClass;
-        while (true) {
+        for (Class<? super T> currentClass : lineage(keyClass)) {
             Function<? super T, R> currentCastings = getCastingFunctionOnce(currentClass, returnClass);
             if (currentCastings != null) {
                 return currentCastings;
             }
-            if (currentClass.equals(Object.class)) {
-                return null;
-            }
-            currentClass = currentClass.getSuperclass();
         }
+        return null;
     }
     
     @SuppressWarnings("unchecked")
