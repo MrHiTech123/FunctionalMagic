@@ -56,6 +56,7 @@ public class Test {
         System.out.println(caster.cast(10, Number.class));
         System.out.println(caster.cast(Substance.ACID, Substance.class));
         System.out.println(caster.cast(Substance.ACID, EverySubstance.class));
+        System.out.println(caster.cast(Substance.ACID, RunecraftObject.class));
         
         // A myA = (A)3;
         // System.out.println(myA);

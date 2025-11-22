@@ -17,11 +17,14 @@ public class ExplicitTypeCaster {
         put(trio.getFirst(), trio.getSecond(), trio.getThird());
     }
     
-    private <T, R> void put(Class<T> keyClass, Class<R> valueClass, Function<T, R> function) {
+    private <T, R> void put(Class<T> keyClass, Class<R> valueClass, Function<T, ? extends R> function) {
         if (!typeCastings.containsKey(keyClass)) {
             typeCastings.put(keyClass, new HashMap<>());
         }
         typeCastings.get(keyClass).put(valueClass, function);
+        if (!valueClass.equals(Object.class)) {
+            put(keyClass, valueClass.getSuperclass(), function);
+        }
     }
     
     
