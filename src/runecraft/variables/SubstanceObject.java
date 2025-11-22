@@ -12,10 +12,10 @@ public class SubstanceObject extends RunecraftObject {
         return substance.toString();
     }
     
-    // @Override
-    // public String toString() {
-    //     return toStringWithoutAddress();
-    // }
+    @Override
+    public String toString() {
+        return toStringWithoutAddress();
+    }
     
     @Override
     public boolean exists() {
