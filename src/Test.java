@@ -1,8 +1,8 @@
-import org.w3c.dom.ls.LSOutput;
-import runecraft.datastructure.Pair;
-import runecraft.result.RunecraftEmptyResult;
+import runecraft.parser.RunecraftTypeCaster;
 import runecraft.result.RunecraftResult;
+import runecraft.variables.EverySubstance;
 import runecraft.variables.RunecraftMemory;
+import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
 import java.util.function.BiFunction;
@@ -47,6 +47,15 @@ public class Test {
         
         // System.out.println(memory.getVariable('ⲁ').get());
         System.out.println(memory.getVariable('Ⲁ'));
+        
+        RunecraftTypeCaster caster = new RunecraftTypeCaster();
+        
+        System.out.println(caster.cast(10, Integer.class));
+        System.out.println(caster.cast("Hello world", String.class));
+        System.out.println(caster.cast("Hello world", Integer.class));
+        System.out.println(caster.cast(10, Number.class));
+        System.out.println(caster.cast(Substance.ACID, Substance.class));
+        System.out.println(caster.cast(Substance.ACID, EverySubstance.class));
         
         // A myA = (A)3;
         // System.out.println(myA);

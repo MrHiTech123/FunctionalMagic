@@ -1,9 +1,8 @@
 package runecraft.variables;
 
 import runecraft.datastructure.DataHelpers;
-import runecraft.datastructure.Pair;
+import runecraft.datastructure.pair.Pair;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public enum Substance {
