@@ -343,6 +343,35 @@ public class RunecraftParser {
                 }
                 return runProgramRecursive(remainingTokensAfterIf, memory);
             }
+        }
+        else if (compareToken(tokens, "🝮")) {
+            String remainingTokens = tokens.substring("🝮".length());
+            
+            boolean conditionIsTruthy = false;
+            
+            String tokensAfterLoop = null;
+            
+            do {
+                RunecraftResult<?> condition = call.readArgument(Integer.class, remainingTokens, memory);
+                if (condition instanceof RunecraftErrorResult error) {
+                    error.addStackTrace(remainingTokens, error.remainingTokens());
+                    return error;
+                }
+                if (condition.get() instanceof Integer conditionValue) {
+                    conditionIsTruthy = builtins.isTruthy(conditionValue);
+                }
+                
+                if (tokensAfterLoop == null) {
+                    tokensAfterLoop = remainingTokensAfterParsed(condition.remainingTokens(), memory);
+                }
+                
+                if (conditionIsTruthy) {
+                    runProgramRecursive(condition.remainingTokens(), memory);
+                }
+            } while (conditionIsTruthy);
+            
+            return new RunecraftEmptyResult(tokensAfterLoop);
+            
             
         }
         else if (compareToken(tokens, "🝓⧰")) {
@@ -487,7 +516,9 @@ public class RunecraftParser {
         parser.runProgram("🝓⧰⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
         parser.runProgram(">.Ⲁ🝓⧰⳺🜑🜂🜄🜑🜄🜄🜑🜃🜁⳻ⲙ🜼🝧🜎ⲙ🝰🝯🝰🝰🝯🝯.🝯🝯🝯🝯Ⲁ>⊢Ⲁ🝯Ⲁ.");
         parser.runProgram("🜾🝁⊣🝰.🝰🝯🜳🝧🝏🜂...🜳🝧🝏🜄...");
-        parser.runProgram("🝧🝏🜾⳺⳻🜂🜄.");
+        parser.runProgram("🝧🝏🜾🝭⳺🜄⳻🜂🜄.");
+        parser.runProgram(">🝰🝰🝯Ⲁ🝮Ⲁ>⊣Ⲁ🝯Ⲁ🝧🝏🜂⊢Ⲁ🝯");
+        
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
         // // parser.runProgram(">⊣🝊🜑🜑♀🜃🜑🜍🜑🜄♀🝊");
