@@ -277,8 +277,8 @@ public class RunecraftParser {
             
             return new RunecraftResult<>(result, tokens.substring(1));
         }
-        else if (compareToken(tokens, "🝭")) {
-            String remainingTokens = tokens.substring("🝭".length());
+        else if (compareToken(tokens, "🝓⧰")) {
+            String remainingTokens = tokens.substring("🝓⧰".length());
             RunecraftResult<?> iterable = runProgramRecursive(remainingTokens, memory);
             if (iterable instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens, error.remainingTokens());
@@ -419,7 +419,8 @@ public class RunecraftParser {
         //     }
         // }
         
-        parser.runProgram("🝭⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
+        parser.runProgram("🝓⧰⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
+        parser.runProgram(">.Ⲁ🝓⧰⳺🜑🜂🜄🜑🜄🜄🜑🜃🜁⳻ⲙ🜼🝧🜎ⲙ🝰🝯🝰🝰🝯🝯.🝯🝯🝯🝯Ⲁ>⊢Ⲁ🝯Ⲁ.");
         
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
