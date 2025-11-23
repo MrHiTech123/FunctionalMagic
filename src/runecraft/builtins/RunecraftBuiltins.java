@@ -7,6 +7,8 @@ import runecraft.result.RunecraftResult;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
+import java.util.Set;
+
 public class RunecraftBuiltins {
     public RunecraftResult<?> combineSubstances(Substance first, Substance second) {
         Substance toReturn = Substance.combine(first, second);
@@ -42,6 +44,17 @@ public class RunecraftBuiltins {
                 ""
         );
         return new RunecraftEmptyResult("");
+    }
+    
+    public boolean isTruthy(int insertedInt) {
+        return insertedInt > 0;
+    }
+    
+    public int size(Object object) {
+        if (object instanceof Set<?> set) {
+            return set.size();
+        }
+        return -1;
     }
     
     
