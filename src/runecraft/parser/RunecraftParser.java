@@ -518,6 +518,7 @@ public class RunecraftParser {
         parser.runProgram("🜾🝁⊣🝰.🝰🝯🜳🝧🝏🜂...🜳🝧🝏🜄...");
         parser.runProgram("🝧🝏🜾🝭⳺🜄⳻🜂🜄.");
         parser.runProgram(">🝰🝰🝯Ⲁ🝮Ⲁ>⊣Ⲁ🝯Ⲁ🝧🝏🜂⊢Ⲁ🝯");
+        parser.runProgram(">⳺🜄⳺🜃⳺🜂⳺🜁⳺⳻⳻⳻⳻⳻Ⲙ🝮🝭Ⲙ🜼🝓⧰ⲘⲊ🜾⊢🝯🝭Ⲋ>ⲊⲘ.>ⲊⲈ.🝧🝏Ⲉ.");
         
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
@@ -531,3 +532,20 @@ public class RunecraftParser {
     
     
 }
+
+/*
+    Materials = {WATER, {EARTH, {FIRE, {AIR}}}}
+    while size Materials {
+        for Element in Materials {
+            if size Element {
+                Materials = Element
+            }
+            else {
+                Substance = Element
+            }
+            
+            Create(Bolt(Substance, 0))
+        }
+    }
+*/
+
