@@ -4,7 +4,6 @@ import runecraft.error.RunecraftError;
 import runecraft.result.RunecraftEmptyResult;
 import runecraft.result.RunecraftErrorResult;
 import runecraft.result.RunecraftResult;
-import runecraft.variables.RunecraftMemory;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
@@ -36,7 +35,7 @@ public class RunecraftBuiltins {
     }
     
     
-    public RunecraftResult<?> shoot(RunecraftObject object) {
+    public RunecraftResult<?> yeet(RunecraftObject object) {
         if (!object.exists()) return new RunecraftErrorResult(
                 RunecraftError.NonExistanceError,
                 "Failed to shoot object " + object + ", object does not exist",
@@ -44,7 +43,6 @@ public class RunecraftBuiltins {
         );
         return new RunecraftEmptyResult("");
     }
-    
     
     
     

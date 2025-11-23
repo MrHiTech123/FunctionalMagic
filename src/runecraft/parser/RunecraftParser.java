@@ -7,6 +7,9 @@ import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
 import runecraft.variables.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class RunecraftParser {
     private final FunctionCaller call;
     private final RunecraftBuiltins builtins;
@@ -21,7 +24,6 @@ public class RunecraftParser {
         return firstTokens.equals(target);
         
     }
-    
     
     public RunecraftResult<Integer> parseNumber(String tokens) {
         RunecraftResult<Integer> numberParsed;
@@ -46,6 +48,32 @@ public class RunecraftParser {
             ++resultNum;
         }
         return new RunecraftResult<>(resultNum, numberParsed.remainingTokens());
+    }
+    
+    public RunecraftResult<?> parseSet(String tokens, RunecraftMemory memory) {
+        Set<Object> setToReturn = new HashSet<>();
+        String currentTokens = tokens;
+        
+        while (true) {
+            if (currentTokens.isEmpty()) {
+                return new RunecraftErrorResult(
+                        RunecraftError.SyntaxError, 
+                        "End of set not found", 
+                        currentTokens
+                );
+            }
+            RunecraftResult<?> result = runProgramRecursive(currentTokens, memory);
+            if (result instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens, error.remainingTokens());
+                return error;
+            }
+            else if (result instanceof RunecraftEndSetResult) {
+                return new RunecraftResult<>(setToReturn, result.remainingTokens());
+            }
+            
+            setToReturn.add(result.get());
+            currentTokens = result.remainingTokens();
+        }
     }
     
     public RunecraftResult<?> runProgramRecursive(String tokens, RunecraftMemory memory) {
@@ -116,11 +144,11 @@ public class RunecraftParser {
             );
         }
         
-        else if (compareToken(tokens, "🝭")) {
-            String leftoverTokens = tokens.substring("🝭".length());
+        else if (compareToken(tokens, "🜳")) {
+            String leftoverTokens = tokens.substring("🜳".length());
             return call.function(
                     RunecraftObject.class, 
-                    builtins::shoot, 
+                    builtins::yeet, 
                     leftoverTokens, 
                     memory
             );
@@ -293,7 +321,7 @@ public class RunecraftParser {
             return new RunecraftErrorResult(
                     RunecraftError.SyntaxError, 
                     "Unknown character", 
-                    tokens.substring(1)
+                    ""
             );
         }
     }
@@ -314,22 +342,22 @@ public class RunecraftParser {
     
     public static void main(String[] args) {
         RunecraftParser parser = new RunecraftParser(new RunecraftPrinterBuiltins());
-        // parser.runProgram("🝭🝧🝏🜁🝯🝯🝯.🝰🝯🝰🝯..");
+        // parser.runProgram("🜳🝧🝏🜁🝯🝯🝯.🝰🝯🝰🝯..");
         
         
-        // parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🝭🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
-        // parser.runProgram("🝭🝊");
+        // parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🜳🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
+        // parser.runProgram("🜳🝊");
         parser.runProgram(">🝏🜂...🝊");
         
-        parser.runProgram("🜼🜼🝭🝊>🝏🜂...🝊🝭🝊");
-        parser.runProgram("🝭🜂");
-        parser.runProgram("🝭🜑🝏🜂...🜄");
-        parser.runProgram("🝭🝧🝏🝊...");
+        parser.runProgram("🜼🜼🜳🝊>🝏🜂...🝊🜳🝊");
+        parser.runProgram("🜳🜂");
+        parser.runProgram("🜳🜑🝏🜂...🜄");
+        parser.runProgram("🜳🝧🝏🝊...");
         
         
-        // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🝭🝏🜂.🝰🝰🝰🝯.🝰🝯");
+        // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
         // // parser.runProgram(">⊣🝊🜑🜑♀🜃🜑🜍🜑🜄♀🝊");
-        // parser.runProgram("🝭🝧🝏🜑🜑♀🜃🜑🜍🜑🜄♀...");
+        // parser.runProgram("🜳🝧🝏🜑🜑♀🜃🜑🜍🜑🜄♀...");
         
         
         
