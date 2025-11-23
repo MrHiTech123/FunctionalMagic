@@ -224,6 +224,14 @@ public class RunecraftParser {
                     memory
             );
         }
+        else if (compareToken(tokens, "🝁")) {
+            return call.function(
+                    Integer.class,
+                    builtins::not,
+                    tokens.substring("🝁".length()),
+                    memory
+            );
+        }
         else if (compareToken(tokens, ">")) {
             RunecraftResult<?> toAssign = runProgramRecursive(tokens.substring(">".length()), memory);
             
@@ -470,7 +478,7 @@ public class RunecraftParser {
         
         parser.runProgram("🝓⧰⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
         parser.runProgram(">.Ⲁ🝓⧰⳺🜑🜂🜄🜑🜄🜄🜑🜃🜁⳻ⲙ🜼🝧🜎ⲙ🝰🝯🝰🝰🝯🝯.🝯🝯🝯🝯Ⲁ>⊢Ⲁ🝯Ⲁ.");
-        parser.runProgram("🜾⊣🝰.🝰🝯🜳🝧🝏🜂...🜳🝧🝏🜄...");
+        parser.runProgram("🜾🝁⊣🝰.🝰🝯🜳🝧🝏🜂...🜳🝧🝏🜄...");
         
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");

@@ -46,6 +46,12 @@ public class RunecraftBuiltins {
         return new RunecraftEmptyResult("");
     }
     
+    public int not(int condition) {
+        if (condition == 0) {
+            return 1;
+        }
+        return -condition;
+    }
     public boolean isTruthy(int insertedInt) {
         return insertedInt > 0;
     }
