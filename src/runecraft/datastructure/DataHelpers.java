@@ -2,13 +2,13 @@ package runecraft.datastructure;
 
 import runecraft.variables.Substance;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class DataHelpers {
+    private static final Random random = new Random();
+    
     public static <K extends Enum<K>, V> Map<K, V> mapOfKeys(Class<K> keys, Predicate<K> predicate, Function<K, V> valueFunction) {
         Map<K, V> toReturn = new HashMap<>();
         for (K currentEnumValue : keys.getEnumConstants()) {
@@ -51,4 +51,13 @@ public class DataHelpers {
         }
         return false;
     }
+    
+    private static int compareRandomly(Object a, Object b) {
+        return random.nextBoolean()? 1 : -1;
+    }
+    
+    public static void shuffle(ArrayList<?> list) {
+        list.sort(DataHelpers::compareRandomly);
+    }
+    
 }

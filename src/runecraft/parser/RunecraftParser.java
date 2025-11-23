@@ -2,13 +2,13 @@ package runecraft.parser;
 
 import runecraft.builtins.RunecraftBuiltins;
 import runecraft.builtins.RunecraftPrinterBuiltins;
+import runecraft.datastructure.DataHelpers;
 import runecraft.error.RunecraftError;
 import runecraft.error.RunecraftWarningType;
 import runecraft.result.*;
 import runecraft.variables.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class RunecraftParser {
     private final FunctionCaller call;
@@ -62,13 +62,13 @@ public class RunecraftParser {
                         currentTokens
                 );
             }
+            if (compareToken(currentTokens, "⳻")) {
+                return new RunecraftResult<>(setToReturn, currentTokens.substring("⳻".length()));
+            }
             RunecraftResult<?> result = runProgramRecursive(currentTokens, memory);
             if (result instanceof RunecraftErrorResult error) {
                 error.addStackTrace(tokens, error.remainingTokens());
                 return error;
-            }
-            else if (result instanceof RunecraftEndSetResult) {
-                return new RunecraftResult<>(setToReturn, result.remainingTokens());
             }
             
             setToReturn.add(result.get());
@@ -170,6 +170,9 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, "🝰") || compareToken(tokens, "🝯") || compareToken(tokens, ".")) {
             return parseNumber(tokens);
+        }
+        else if (compareToken(tokens, "⳺")) {
+            return parseSet(tokens.substring("⳺".length()), memory);
         }
         else if (compareToken(tokens, "⊢")) {
             return call.biFunction(
@@ -274,6 +277,54 @@ public class RunecraftParser {
             
             return new RunecraftResult<>(result, tokens.substring(1));
         }
+        else if (compareToken(tokens, "🝭")) {
+            String remainingTokens = tokens.substring("🝭".length());
+            RunecraftResult<?> iterable = runProgramRecursive(remainingTokens, memory);
+            if (iterable instanceof RunecraftErrorResult error) {
+                error.addStackTrace(tokens, error.remainingTokens());
+            }
+            if (!(iterable.get() instanceof Set<?>)) {
+                return new RunecraftErrorResult(
+                        RunecraftError.TypeError, 
+                        "Expected Set, got " + RunecraftError.nameFromClass(iterable.get().getClass()), 
+                        remainingTokens
+                    );
+            }
+            
+            char varName = iterable.remainingTokens().charAt(0);
+            if (!RunecraftMemory.isVarName(varName)) {
+                return new RunecraftErrorResult(
+                        RunecraftError.TypeError, 
+                        "Expected variable name, got " + varName, 
+                        iterable.remainingTokens()
+                );
+            }
+            
+            Set<?> loopSet = (Set<?>) iterable.get();
+            ArrayList<?> loopArrayList = new ArrayList<>(loopSet);
+            DataHelpers.shuffle(loopArrayList);
+            
+            String loopTokens = iterable.remainingTokens().substring(1);
+            
+            RunecraftResult<?> result = null;
+            for (Object loopVariable : loopArrayList) {
+                memory.setVariable(varName, loopVariable);
+                result = runProgramRecursive(loopTokens, memory);
+                if (result instanceof RunecraftErrorResult error) {
+                    error.addStackTrace(loopTokens, result.remainingTokens());
+                    return error;
+                }
+                memory.popVariable(varName);
+            }
+            if (result == null) {
+                return new RunecraftErrorResult(
+                        RunecraftError.ForLoopNotRunError, 
+                        "For loop body was never run",
+                        loopTokens
+                );
+            }
+            return new RunecraftEmptyResult(result.remainingTokens());
+        }
         else if (compareToken(tokens, "🝓")) {
             String remainingTokens = tokens.substring("🝓".length());
             RunecraftResult<?> startResult = call.readArgument(Integer.class, remainingTokens, memory);
@@ -283,6 +334,15 @@ public class RunecraftParser {
             }
             
             char varName = startResult.remainingTokens().charAt(0);
+            if (!RunecraftMemory.isVarName(varName)) {
+                return new RunecraftErrorResult(
+                        RunecraftError.TypeError, 
+                        "Expected variable name, got " + varName, 
+                        startResult.remainingTokens()
+                );
+            }
+            
+            
             RunecraftResult<?> endResult = call.readArgument(
                     Integer.class,
                     startResult.remainingTokens().substring(1),
@@ -347,11 +407,19 @@ public class RunecraftParser {
         
         // parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🜳🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
         // parser.runProgram("🜳🝊");
-        parser.runProgram(">🝏🜂.🝊");
+        // parser.runProgram(">🝏🜂.🝊");
+        //
+        // parser.runProgram("🜼🜼🜳🝊..>🝏🜂.🝊🜳🝊..");
+        // parser.runProgram("🜳🜂..");
+        // parser.runProgram("🜳🝧🝏🝊...");
+        // RunecraftResult<?> setResult = parser.runProgramRecursive("⳺🜂🜑🜄🜂🝏🜂.🜄🜍♀⳻", new RunecraftMemory());
+        // if (setResult.get() instanceof Set<?> set) {
+        //     for (Object object : set) {
+        //         System.out.println(object);
+        //     }
+        // }
         
-        parser.runProgram("🜼🜼🜳🝊..>🝏🜂.🝊🜳🝊..");
-        parser.runProgram("🜳🜂..");
-        parser.runProgram("🜳🝧🝏🝊...");
+        parser.runProgram("🝭⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
         
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
