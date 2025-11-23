@@ -224,6 +224,14 @@ public class RunecraftParser {
                     memory
             );
         }
+        else if (compareToken(tokens, "🝭")) {
+            return call.function(
+                    Object.class,
+                    builtins::size,
+                    tokens.substring("🝭".length()),
+                    memory
+            );
+        }
         else if (compareToken(tokens, "🝁")) {
             return call.function(
                     Integer.class,
