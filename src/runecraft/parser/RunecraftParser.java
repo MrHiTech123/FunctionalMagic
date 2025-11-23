@@ -277,6 +277,14 @@ public class RunecraftParser {
             
             return new RunecraftResult<>(result, tokens.substring(1));
         }
+        else if (compareToken(tokens, "🜾")) {
+            String remainingTokens = tokens.substring("🜾".length());
+            RunecraftResult<?> conditionValue = call.readArgument(Integer.class, remainingTokens, memory);
+            
+            
+            return new RunecraftEmptyResult(remainingTokens);
+            
+        }
         else if (compareToken(tokens, "🝓⧰")) {
             String remainingTokens = tokens.substring("🝓⧰".length());
             RunecraftResult<?> iterable = runProgramRecursive(remainingTokens, memory);
@@ -373,9 +381,6 @@ public class RunecraftParser {
             else {
                 return new RunecraftErrorResult(RunecraftError.ForLoopNotRunError, "For loop body was never run", endResult.remainingTokens());
             }
-            
-            
-            
         }
         else {
             return new RunecraftErrorResult(
