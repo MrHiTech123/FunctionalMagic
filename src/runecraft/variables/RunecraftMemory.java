@@ -63,6 +63,22 @@ public class RunecraftMemory {
         return false;
     }
     
+    public RunecraftMemory copy() {
+        RunecraftMemory toReturn = new RunecraftMemory();
+        
+        toReturn.setPointer(getPointer());
+        
+        for (char c : GLOBALS.keySet()) {
+            toReturn.setVariable(c, getVariable(c));
+        }
+        
+        for (char c : LOCALS.keySet()) {
+            toReturn.setVariable(c, getVariable(c));
+        }
+        
+        return toReturn;
+    }
+    
     
     public Object getVariable(char variable) {
         if (isGlobalVar(variable)) {

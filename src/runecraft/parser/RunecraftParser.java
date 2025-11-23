@@ -76,6 +76,20 @@ public class RunecraftParser {
         }
     }
     
+    private static RunecraftResult<?> solutionBoxed(String tokens, RunecraftMemory memory) {
+        return new RunecraftParser(new RunecraftBuiltins()).runProgramRecursive(tokens, memory.copy());
+    }
+    
+    private static String remainingTokensAfterParsed(String expressionTokens, RunecraftMemory memory) {
+        RunecraftResult<?> answer = solutionBoxed(expressionTokens, memory);
+        
+        if (answer instanceof RunecraftErrorResult) {
+            return "";
+        }
+        return answer.remainingTokens();
+        
+    }
+    
     public RunecraftResult<?> runProgramRecursive(String tokens, RunecraftMemory memory) {
         
         if (tokens.isEmpty()) {
@@ -279,10 +293,37 @@ public class RunecraftParser {
         }
         else if (compareToken(tokens, "🜾")) {
             String remainingTokens = tokens.substring("🜾".length());
-            RunecraftResult<?> conditionValue = call.readArgument(Integer.class, remainingTokens, memory);
+            RunecraftResult<?> condition = call.readArgument(Integer.class, remainingTokens, memory);
+            if (condition instanceof RunecraftErrorResult error) {
+                error.addStackTrace(remainingTokens, error.remainingTokens());
+                return error;
+            }
             
-            
-            return new RunecraftEmptyResult(remainingTokens);
+            boolean conditionIsTrue = !condition.get().equals(0);
+            if (conditionIsTrue) {
+                RunecraftResult<?> result = runProgramRecursive(condition.remainingTokens(), memory);
+                String remainingTokensAfterElse = remainingTokensAfterParsed(result.remainingTokens(), memory);
+                if (result instanceof RunecraftErrorResult error) {
+                    error.addStackTrace(remainingTokens, error.remainingTokens());
+                    return error;
+                }
+                if (result instanceof RunecraftEmptyResult) {
+                    return new RunecraftEmptyResult(remainingTokensAfterElse);
+                }
+                
+                if (remainingTokensAfterElse.isEmpty()) {
+                    runProgramRecursive(result.remainingTokens(), memory);
+                }
+                
+                return new RunecraftResult<>(result.get(), remainingTokensAfterElse); // TODO ALSO THAT COPY METHOD
+            }
+            else {
+                String remainingTokensAfterIf = remainingTokensAfterParsed(condition.remainingTokens(), memory);
+                if (remainingTokensAfterIf.isEmpty()) {
+                    return runProgramRecursive(condition.remainingTokens(), memory);
+                }
+                return runProgramRecursive(remainingTokensAfterIf, memory);
+            }
             
         }
         else if (compareToken(tokens, "🝓⧰")) {
@@ -426,6 +467,7 @@ public class RunecraftParser {
         
         parser.runProgram("🝓⧰⳺🜂🜄🝧🝏🜑♀🜂🝯🜑🜄🜁⳻Ⲙ🜳Ⲙ🝯..");
         parser.runProgram(">.Ⲁ🝓⧰⳺🜑🜂🜄🜑🜄🜄🜑🜃🜁⳻ⲙ🜼🝧🜎ⲙ🝰🝯🝰🝰🝯🝯.🝯🝯🝯🝯Ⲁ>⊢Ⲁ🝯Ⲁ.");
+        parser.runProgram("🜾🝰🜳🝧🝏🜂...🜳🝧🝏🜄...");
         
         
         // parser.runProgram("🝓🝰🝯ⲓ🝯🝰🝯🜳🝏🜂.🝰🝰🝰🝯.🝰🝯");
