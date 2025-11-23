@@ -114,10 +114,8 @@ public class RunecraftParser {
             );
         }
         else if (compareToken(tokens, "🝏")) {
-            return call.quadFunction(
+            return call.biFunction(
                     Substance.class,
-                    Integer.class,
-                    Integer.class,
                     Integer.class,
                     Bolt::new,
                     tokens.substring("🝏".length()),
@@ -146,8 +144,10 @@ public class RunecraftParser {
         
         else if (compareToken(tokens, "🜳")) {
             String leftoverTokens = tokens.substring("🜳".length());
-            return call.function(
-                    RunecraftObject.class, 
+            return call.triFunction(
+                    RunecraftObject.class,
+                    Integer.class,
+                    Integer.class,
                     builtins::yeet, 
                     leftoverTokens, 
                     memory
@@ -347,11 +347,10 @@ public class RunecraftParser {
         
         // parser.runProgram("🝓🝯ⲙ🝰🝯🝰🝯🜳🝧🝏🜑🜃🜃🝰.🝯.ⲙ");
         // parser.runProgram("🜳🝊");
-        parser.runProgram(">🝏🜂...🝊");
+        parser.runProgram(">🝏🜂.🝊");
         
-        parser.runProgram("🜼🜼🜳🝊>🝏🜂...🝊🜳🝊");
-        parser.runProgram("🜳🜂");
-        parser.runProgram("🜳🜑🝏🜂...🜄");
+        parser.runProgram("🜼🜼🜳🝊..>🝏🜂.🝊🜳🝊..");
+        parser.runProgram("🜳🜂..");
         parser.runProgram("🜳🝧🝏🝊...");
         
         

@@ -12,11 +12,11 @@ public class RunecraftPrinterBuiltins extends RunecraftBuiltins {
     }
     
     @Override
-    public RunecraftResult<?> yeet(RunecraftObject objectShot) {
+    public RunecraftResult<?> yeet(RunecraftObject objectShot, int speed, int angleRadians) {
         if (objectShot.exists()) {
-            System.out.println("(yeet " + objectShot + ")");
+            System.out.println("(yeet " + objectShot + ", Speed=" + speed + ", Angle=" + angleRadians + ")");
         }
-        return super.yeet(objectShot);
+        return super.yeet(objectShot, speed, angleRadians);
         
     }
 }

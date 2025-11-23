@@ -3,15 +3,10 @@ package runecraft.variables;
 public class Bolt extends RunecraftObject {
     private final Substance material;
     private final int damage;
-    private final int speed;
-    private final int angle;
     
-    
-    public Bolt(Substance material, int damage, int speed, int angle) {
+    public Bolt(Substance material, int damage) {
         this.material = material;
         this.damage = damage;
-        this.speed = speed;
-        this.angle = angle;
     }
     
     public Substance getMaterial() {
@@ -22,16 +17,8 @@ public class Bolt extends RunecraftObject {
         return damage;
     }
     
-    public int getSpeed() {
-        return speed;
-    }
-    
-    public int getAngle() {
-        return angle;
-    }
-    
     @Override
     public String toStringWithoutAddress() {
-        return "Bolt(Material=" + material + ", Damage=" + damage + ", Speed=" + speed + ", Angle=" + angle + ", x=" + x + ", y=" + y +")";
+        return "Bolt(Material=" + material + ", Damage=" + damage + ", x=" + x + ", y=" + y +")";
     }
 }

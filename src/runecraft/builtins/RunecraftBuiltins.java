@@ -26,7 +26,7 @@ public class RunecraftBuiltins {
     }
     
     public void assignPointer(RunecraftObject object) {
-        System.out.println("Assigned Pointer " + object);
+        System.out.println("(Turn Pointer into " + object + ")");
     }
     
     public RunecraftObject create(RunecraftObject object) {
@@ -35,7 +35,7 @@ public class RunecraftBuiltins {
     }
     
     
-    public RunecraftResult<?> yeet(RunecraftObject object) {
+    public RunecraftResult<?> yeet(RunecraftObject object, int speed, int angleRadians) {
         if (!object.exists()) return new RunecraftErrorResult(
                 RunecraftError.NonExistanceError,
                 "Failed to shoot object " + object + ", object does not exist",
