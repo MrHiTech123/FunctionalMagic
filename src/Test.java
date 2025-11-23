@@ -5,6 +5,9 @@ import runecraft.variables.RunecraftMemory;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.function.BiFunction;
 
 class A {
@@ -58,6 +61,7 @@ public class Test {
         System.out.println(caster.cast(Substance.ACID, SubstanceObject.class));
         System.out.println(caster.cast(Substance.ACID, RunecraftObject.class));
         System.out.println(caster.cast(Substance.ACID, Object.class));
+        System.out.println(caster.cast(new HashSet<>(), Integer.class));
         
         // A myA = (A)3;
         // System.out.println(myA);

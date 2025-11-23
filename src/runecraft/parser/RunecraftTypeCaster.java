@@ -6,6 +6,11 @@ import runecraft.variables.SubstanceObject;
 import runecraft.variables.RunecraftObject;
 import runecraft.variables.Substance;
 
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
 public class RunecraftTypeCaster extends ExplicitTypeCaster {
     public RunecraftTypeCaster() {
         super(
