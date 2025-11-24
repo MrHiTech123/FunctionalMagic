@@ -35,7 +35,12 @@ Functions in Runecraft are called by writing the function's name, followed immed
 For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you would simply write `🜑🜄🜂`.
 
 ### Function descriptions:
-
+#### Combine
+**Symbol:** `🜑`
+**Typed with key:** C
+**Type Signature:** (Substance baseSubstance, Substance modifierSubstance) -> Substance
+**Description:** Returns a new substance, which is baseSubstance, but modified with or made more similar to modifierSubstance.
+**Examples:** `🜑🜄🜂` will return steam, `🜑🜃🜃` will return stone.
 
 
 
@@ -43,5 +48,6 @@ For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you woul
 
 
 ## Data Types
+
 
 
