@@ -44,6 +44,46 @@ For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you woul
 | Description | Returns a new substance, which is baseSubstance, but modified with or made more similar to modifierSubstance. |
 | Examples | `🜑🜄🜂` will return steam, `🜑🜃🜃` will return stone. |
 
+#### Create
+| | |
+| ------ | - |
+| Symbol | 🝧 |
+| Typed with key | c |
+| Signature | (Object toCreate) -> Object |
+| Description | Instantiates an object in the level, marks that object as "existing", returns the object.|
+| Examples | `🝧🝏🜂🝯` creates a bolt of fire that deals 1 damage|
+
+#### Yeet
+| | |
+| ------ | - |
+| Symbol | 🜳 |
+| Typed with key | y |
+| Signature | (Object toYeet, Integer speed, Integer angleRadians) -> Object |
+| Description | Cause an object to move at speed speed, at an angle angleRadians (where an angle of 0 radians is directly away from the player). |
+| Examples | `🜳🝧🝏🜂🝯.🝰🝰🝰🝰🝯.🝰` Creates a bolt of fire that deals 1 damage, and yeets it directly away from the player at a speed of 32|
+
+#### Diverge
+| | |
+| ------ | - |
+| Symbol | 🜼 |
+| Typed with key | d |
+| Signature | (Expr expr1, Expr expr2) -> Null |
+| Description | Runs expr1, then runs expr2. |
+| Examples | `🜼🜳🝧🝏🜂🝯.🝯.🝯🜳🝧🝏🜑🜂🜄🝰🝯🝰🝯.🝰🝯.🝰` will create a bolt of fire that deals 1 damage, and then yeet it at speed 1 and angle 1, and then create a bolt of acid that deals 10 damage, and shoot it at speed 2 and in direction 0 |
+
+
+### Objects
+#### Bolt
+| | |
+| ------ | - |
+| Symbol | 🝏 |
+| Typed with key | b |
+| Signature | (Substance material, Integer damage) -> Bolt |
+| Description | Returns a bolt made of material, that deals damage damage on hitting a target (damage system to be implemented if this ever becomes a game). |
+| Examples | `🝏🜂🝯` returns a bolt of fire that deals 1 damage, `🝏🜑🜂🜄🝰🝯🝰🝯` returns a bolt of acid that deals 10 damage. |
+
+
+
 
 
 
@@ -52,6 +92,7 @@ For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you woul
 
 
 ## Data Types
+
 
 
 
