@@ -19,18 +19,29 @@ A **substance** is a real-world material, such as wood, stone, or blood. There a
 | Mind | 🜍 | m |
 | Flesh | ♀ | M |
 
-### Numbers
-Numbers in Runecraft are written in binary, reversed (meaning that the least significant digit is on the left). 🝰 represents 0, and 🝯 represents 1.
+### Integers
+Integers in Runecraft are written in binary, reversed (meaning that the least significant digit is on the left). 🝰 represents 0, and 🝯 represents 1.
 For example, 🝰🝰🝯🝰🝯 translates to 00101, reversed is 10100, which is 20 in binary. That means that 🝰🝰🝯🝰🝯 represents the number 20.
 
-Note: The parser can usually tell when a binary number ends because another token will be, but you can explicitly end a binary literal with a `.`. This is useful when it is ambiguous when a number ends, say, when two numbers are written next to one another.
+Note: The parser can usually tell when an integer literal ends, but you can explicitly end a binary literal with a `.`. This is useful when it is ambiguous when an integer literal ends, say, when two integer literals are written next to one another.
 
-Everything in Runecraft is an integer—there are no fractions or decimals.
+For example, to call the `⊢` (add) function, you need to write the arguments next to one another, like so: `⊢🝰🝯.🝰🝰🝯`. Note how the `.` between the two literals indicates where one ends and the next one begins.
 
-### Sets
+Every number in Runecraft is an integer—there are no fractions or decimals.
 
 ## Functions
+### Syntax
+Functions in Runecraft are called by writing the function's name, followed immediately by all its arguments in order. Once again, no spaces are used.
+For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you would simply write `🜑🜄🜂`.
+
+### Function descriptions:
+
+
+
+
+
 
 
 ## Data Types
+
 
