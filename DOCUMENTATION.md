@@ -82,16 +82,20 @@ For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you woul
 | Description | Returns a bolt made of material, that deals damage damage on hitting a target (damage system to be implemented if this ever becomes a game). |
 | Examples | `🝏🜂🝯` returns a bolt of fire that deals 1 damage, `🝏🜑🜂🜄🝰🝯🝰🝯` returns a bolt of acid that deals 10 damage. |
 
+## Data Structures
+### Sets
+The set is the only data structure that exists natively in Runecraft. It is written using `⳺` and `⳻` as delimiters. Elements inside are written inside the set, one after the other. No commas are needed. Sets cannot hold duplicate elements, but elements may be of different types. Sets may also be stored in other sets.
+Sets are unordered, and attempts to iterate through them (documentation coming soon!) will never have a consistent order.
+
+
+#### Examples:
+- `⳺🜄🜃🜂🜁⳻` is the set `{WATER, EARTH, FIRE, AIR}`.
+- `⳺🜑🜄🜂🜑🜃🜃🜃🜂⳻` is literally the set `{combine(WATER, FIRE), combine(EARTH, EARTH), EARTH, WATER}`, which simplifies to `{ACID, STONE, EARTH, WATER}`.
+- `⳺🝰🝰🝯.🝰🝯.🝯.🝰🝰🝯🝰🝯.🝰🝰🝰🝰🝰🝯🜂🜄⳻` is the set `{4, 2, 1, 20, FIRE, WATER}`
+- `⳺⳺🜂🜄⳻⳺🜂⳻⳺🝯🝰🝰🝯⳻🝯⳻` is the set `{{FIRE, WATER}, {FIRE}, {9}, 1}`. Note that the first three elements in this set are sets, while the element that was written last is an integer.
 
 
 
-
-
-
-
-
-
-## Data Types
 
 
 
