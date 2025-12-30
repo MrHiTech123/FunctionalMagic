@@ -84,7 +84,10 @@ For example, to use the `🜑` (combine) function on `🜄` and `🜂`, you woul
 
 ## Data Structures
 ### Sets
-The set is the only data structure that exists natively in Runecraft. It is written using `⳺` and `⳻` as delimiters (which are typed as `(` and `)` on the keyboard). Elements inside are written inside the set, one after the other. No commas are needed. Sets cannot hold duplicate elements, but elements may be of different types. Sets may also be stored in other sets.
+The set is the only data structure that exists natively in Runecraft. It is written using `⳺` and `⳻` as delimiters (which are typed as `(` and `)` on the keyboard). Elements inside are written inside the set, one after the other. No commas are needed.
+
+Sets cannot hold duplicate elements, but elements may be of different types. Sets may also be stored in other sets.
+
 Sets are unordered, and attempts to iterate through them (documentation coming soon!) will never have a consistent order.
 
 
@@ -93,6 +96,7 @@ Sets are unordered, and attempts to iterate through them (documentation coming s
 - `⳺🜑🜄🜂🜑🜃🜃🜃🜂⳻` is literally the set `{combine(WATER, FIRE), combine(EARTH, EARTH), EARTH, WATER}`, which simplifies to `{ACID, STONE, EARTH, WATER}`.
 - `⳺🝰🝰🝯.🝰🝯.🝯.🝰🝰🝯🝰🝯.🝰🝰🝰🝰🝰🝯🜂🜄⳻` is the set `{4, 2, 1, 20, FIRE, WATER}`
 - `⳺⳺🜂🜄⳻⳺🜂⳻⳺🝯🝰🝰🝯⳻🝯⳻` is the set `{{FIRE, WATER}, {FIRE}, {9}, 1}`. Note that the first three elements in this set are sets, while the element that was written last is an integer.
+
 
 
 
