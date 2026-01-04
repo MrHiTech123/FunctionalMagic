@@ -25,7 +25,7 @@ For example, 🝰🝰🝯🝰🝯 translates to 00101, reversed is 10100, which 
 
 Note: The parser can usually tell when an integer literal ends, but you can explicitly end a binary literal with a `.`. This is useful when it is ambiguous when an integer literal ends, say, when two integer literals are written next to one another.
 
-For example, to call the `⊢` (add) function, you need to write the arguments next to one another. If you wrote them like `⊢🝰🝯🝰🝰🝯`, you wouldn't be able to tell when one number ends and the other begins. You must therefore write them with a `.` between them, like so: `⊢🝰🝯.🝰🝰🝯`. This way the `.` between the two literals indicates where one ends and the next one begins.
+For example, to call the `⊢` (add) [function](#functions), you need to write the arguments next to one another. If you wrote them like `⊢🝰🝯🝰🝰🝯`, you wouldn't be able to tell when one number ends and the other begins. You must therefore write them with a `.` between them, like so: `⊢🝰🝯.🝰🝰🝯`. This way the `.` between the two literals indicates where one ends and the next one begins.
 
 Every number in Runecraft is an integer—there are no fractions or decimals.
 
@@ -96,6 +96,7 @@ Sets are unordered, and attempts to iterate through them (documentation coming s
 - `⳺🜑🜄🜂🜑🜃🜃🜃🜂⳻` is literally the set `{combine(WATER, FIRE), combine(EARTH, EARTH), EARTH, WATER}`, which simplifies to `{ACID, STONE, EARTH, WATER}`.
 - `⳺🝰🝰🝯.🝰🝯.🝯.🝰🝰🝯🝰🝯.🝰🝰🝰🝰🝰🝯🜂🜄⳻` is the set `{4, 2, 1, 20, FIRE, WATER}`
 - `⳺⳺🜂🜄⳻⳺🜂⳻⳺🝯🝰🝰🝯⳻🝯⳻` is the set `{{FIRE, WATER}, {FIRE}, {9}, 1}`. Note that the first three elements in this set are sets, while the element that was written last is an integer.
+
 
 
 
